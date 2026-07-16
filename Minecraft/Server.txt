@@ -3,3 +3,6 @@ docker exec -u 1000 -i minecraft-server-cidade-plana mc-send-to-console op SeuNi
 
 CONSOLE RCON
 docker exec -u 1000 -it minecraft-server-cidade-plana rcon-cli
+
+FORCE CREATIVE
+docker exec -u 1000 -i minecraft-server-cidade-plana mc-send-to-console gamerule forceGameMode true
