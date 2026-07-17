@@ -15,3 +15,8 @@ gamerule keep_inventory true
 time set day
 
 kill @e[type=!minecraft:player]
+
+RCON:
+/say teste
+/me 'teste'
+{lraw @a [{"text": "[Admin] ", "color": "red"}, {"text": "'testando'", "color": "yellow"}]
