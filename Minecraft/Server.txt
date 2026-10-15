@@ -1,6 +1,11 @@
 DEFINIR MODO DE JOGO
 docker exec -u 1000 -i minecraft-server mc-send-to-console op SeuNickNoJogo
 
+ADICIONR OU REMOVER JOGADORES
+whitelist list
+whitelist add
+whitelist remove
+
 CONSOLE RCON
 docker exec -u 1000 -it minecraft-server rcon-cli
 
