@@ -93,6 +93,7 @@ Made by Claude Opus 5.5
 
 ### Litoral
 - Um dos 4 lados do mapa vira **praia**: calçadão com postes, mureta, gramado com palmeiras, areia com guarda-sóis, toalhas e banhistas, espuma e mar.
+- Os banhistas **vão embora quando chove** e **voltam depois** que a chuva passa.
 - **Cair na água mata** (a pé ou de carro: o veículo afunda).
 
 ### Estilos
@@ -106,10 +107,28 @@ Made by Claude Opus 5.5
 - **Relógio na tela** · 1 segundo = 1 minuto de jogo (24 min por ciclo).
 - Sol nasce no **leste** e se põe no **oeste**; sombras e cores do céu mudam ao longo do dia.
 - À noite: estrelas, lua, janelas, postes e faróis **acendendo aos poucos**, bloom.
-- **Chuva (opcional):** começa ao entrar no jogo e depois **para e recomeça aleatoriamente**.
-  - Gotas quase invisíveis no escuro que **brilham com a cor das luzes próximas** (postes, faróis, semáforos, giroflex).
-  - Asfalto molhado mais brilhante, neblina mais fechada, nuvens procedurais, som de chuva.
-  - Pedestres **abrem guarda-chuva** ou **saem correndo**.
+- Sem chuva o céu fica **limpo e azul** (com névoa no horizonte); as nuvens só existem onde há chuva.
+
+### Chuva regional (opção "Chuva" no menu)
+A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva** que nascem, crescem, andam com o vento e se dissipam.
+
+- **Ao ativar:** sempre nasce uma célula média **contra o vento**, perto de você, que chega até você empurrada pelo vento. Ela se forma aos poucos (~20–35 s até a força máxima) e dura de 1,5 a 3 minutos.
+- **Depois de 1 minuto:** entra o sorteio. A cada 35–110 s há uma chance (sorteada entre **15% e 40%** por partida) de surgir uma nova célula, perto de você ou em qualquer lugar do mapa. No máximo 4 células ativas.
+- **Frentes grandes (16% das células):** chuva que cobre o **mapa inteiro**, mais forte, e que ao terminar se **quebra em bolsões** menores espalhados.
+- **Tempestade (frente grande):**
+  - chuva mais pesada;
+  - árvores e palmeiras **balançam com o vento**;
+  - **todos os semáforos piscam amarelo** (só visual: os carros continuam respeitando a sinalização normal).
+- **No céu:** a nuvem de cada célula aparece **cerca de 3x maior** que a área onde realmente chove, então dá para vê-la chegando de longe. Embaixo da chuva o céu fecha e escurece.
+- **Desmarcar "Chuva"** faz as células se dissiparem aos poucos, sem corte brusco.
+
+### Efeitos da chuva
+- Gotas quase invisíveis no escuro que **brilham com a cor das luzes próximas** (postes, faróis, semáforos, giroflex). No Synthwave a chuva é mais escura e o brilho perto das luzes é mais forte.
+- Asfalto molhado mais brilhante, neblina mais fechada e **som de chuva** que aumenta conforme a intensidade no lugar onde você está.
+- **Pista molhada:** seu carro perde aderência (derrapa mais e freia pior) enquanto estiver dentro da chuva.
+- Pedestres **abrem guarda-chuva** ou **saem correndo**.
+- **Banhistas** recolhem as coisas e saem da praia quando chove, e **voltam** quando a chuva passa.
+- **Minimapa e mapa grande** mostram as células de chuva com o tamanho real da área molhada e uma **seta azul** indicando para onde cada uma está indo.
 
 ---
 
@@ -168,7 +187,7 @@ Made by Claude Opus 5.5
 
 ## Armas e coletáveis
 
-- **Pistola:** encontrada em becos, com 0 a 100 balas.
+- **Pistola:** encontrada em becos (ponto verde no mapa), com 0 a 100 balas.
   - Top-down: mira no cursor · 3D: mira no centro da tela.
   - **Drive-by:** atira de dentro do carro em qualquer direção.
   - Tiros danificam veículos, matam pedestres e policiais.
@@ -178,8 +197,10 @@ Made by Claude Opus 5.5
 
 ## Mapa e navegação
 
-- **Minimapa** com norte, prédios, becos, armas (verde), vida (vermelho) e polícia.
+- **Minimapa** com norte para cima (o sol nasce no leste/direita), prédios, becos, armas (verde), vida (vermelho), polícia e células de chuva.
 - **Mapa em tela cheia** (TAB ou clique no minimapa) com legenda e indicação da **PRAIA**.
+  - **Não pausa o jogo:** o trânsito, os pedestres e a chuva continuam se movendo no mapa.
+  - Mostra a direção de cada célula de chuva com setas azuis.
 - **Clique direito** marca um destino: **GPS** traça a rota pelas ruas, seta na borda do minimapa e feixe de luz amarelo no mundo.
 
 ---
