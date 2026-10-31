@@ -81,8 +81,11 @@ Made by Claude Opus 5.5
 - **Quarteirões variados:** comuns, longos (2 ou 3 quadras) e em formato de **L**.
 - **Tipos de quarteirão:** prédios, parques, estacionamentos e casas térreas (só Modern, mais comuns longe do centro).
 - **Prédios:** alturas maiores no centro, com recuo de andares, parapeitos, caixas d'água, ar-condicionado no telhado, toldos e janelas que acendem à noite.
+  - **Portaria** na fachada da rua: porta de vidro dupla com marquise e degrau (a porta acende à noite).
+  - **Ar-condicionado de janela** (caixinha com ventilador) em alguns andares das fachadas externas.
+  - **Antenas no telhado:** antenas de TV, parabólicas e mastros altos com **luz vermelha de sinalização** nos prédios mais altos.
 - **Becos** entre prédios, com caçambas e lixo.
-- **Casas térreas:** telhado de duas águas, porta, janelas, quintal, caminho, cerca, árvore, alguns **varais com roupa** e **lixeiras na calçada**.
+- **Casas térreas:** telhado de duas águas, porta, janelas, quintal, caminho, cerca, árvore, **antena de TV no telhado ou parabólica na parede**, alguns **varais com roupa** e **lixeiras na calçada**.
 - **Garagens raras** com um **superesportivo exclusivo**.
 
 ### Ruas
@@ -112,7 +115,7 @@ Made by Claude Opus 5.5
 ### Chuva regional (opção "Chuva" no menu)
 A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva** que nascem, crescem, andam com o vento e se dissipam.
 
-- **Ao ativar:** sempre nasce uma célula média **contra o vento**, perto de você, que chega até você empurrada pelo vento. Ela se forma aos poucos (~20–35 s até a força máxima) e dura de 1,5 a 3 minutos.
+- **Ao ativar:** sempre nasce uma célula média **contra o vento**, perto de você, que chega até você empurrada pelo vento. Ela surge do zero e se forma aos poucos (~40 s até a força máxima, o mesmo tempo que leva para se dissipar). **Primeiro o céu fecha, depois começa a chover:** as gotas só aparecem quando a nuvem já está formada, e ao dissipar a chuva para antes de o céu abrir e dura de 1,5 a 3 minutos.
 - **Depois de 1 minuto:** entra o sorteio. A cada 35–110 s há uma chance (sorteada entre **15% e 40%** por partida) de surgir uma nova célula, perto de você ou em qualquer lugar do mapa. No máximo 4 células ativas.
 - **Frentes grandes (16% das células):** chuva que cobre o **mapa inteiro**, mais forte, e que ao terminar se **quebra em bolsões** menores espalhados.
 - **Tempestade (frente grande):**
@@ -161,6 +164,9 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 
 - Personagem e pedestres em **pixel art 16×24** gerados por código, com animação em 4 direções.
 - Pedestres andam pelas calçadas (inclusive nas calçadas largas das ruas estreitas), fogem e são atropelados.
+- **Entram e saem de prédios e casas** pela porta (aparecendo e sumindo aos poucos). Na chuva, muito mais gente entra para se abrigar.
+- De vez em quando **duas pessoas param para conversar**, uma de frente para a outra, gesticulando; depois cada uma segue seu caminho.
+- Às vezes alguém **para em frente a um prédio olhando as janelas** por alguns segundos.
 - Atropelados soltam um **"ai"** e **somem aos poucos**.
 - Você só cai se for atingido **pela frente** de um carro; batidas de lado só empurram.
 
