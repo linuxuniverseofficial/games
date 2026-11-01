@@ -452,3 +452,20 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
   - Chamadas de desenho, triângulos, geometrias e texturas.
 - O navegador não deixa nenhuma página ler o uso real de CPU/GPU/RAM do sistema; os valores são medidos de dentro do jogo e servem para comparar opções (sombras, bloom, reflexos, tamanho da cidade, trânsito).
 - No menu, o botão de carregar agora se chama **CARREGAR SAVE**.
+
+## Modelos
+- **Sedã e táxi remodelados**: carroceria arredondada feita por seções (capô levemente caído, traseira mais alta, cantos arredondados), cabine com para-brisa e vidro traseiro inclinados, teto curvo e colunas na cor do carro, para-choques, grade, retrovisores, maçanetas e faróis/lanternas ovais. Os outros veículos continuam com o modelo antigo por enquanto.
+- **Lancha**: a proa (bico) estava com as faces viradas para dentro e ficava invisível; corrigido, e ganhou fundo.
+
+## Todos os veículos remodelados
+- Viatura, esportivo, superesportivo, conversível, hatch, SUV, van, picape, ônibus e caminhão agora usam a mesma modelagem do sedã: carroceria e cabine feitas por seções arredondadas, vidros inclinados, teto curvo, para-choques, retrovisores e faróis/lanternas ovais (cada tipo com suas proporções: SUV alto com bagageiro, van monovolume, picape com caçamba, super com aerofólio e entradas laterais, conversível com para-brisa e bancos).
+- **Moto**: tanque, carenagem e para-lamas arredondados, garfo e guidão cilíndricos, farol oval.
+- **Lancha**: casco em V feito por seções, com proa pontuda e convés de madeira.
+
+## Câmera dentro do veículo (1ª pessoa)
+- Agora fica **sobre o capô**, olhando por cima dele. Em ônibus e caminhão (sem capô) fica logo à frente do para-brisa.
+
+## Correções
+- **Reflexo da chuva em cima do rio**: a máscara das áreas molhadas era aplicada de cabeça para baixo; agora o molhado fica só em ruas, calçadas e pontes.
+- **Notificações empilhadas**: cada aviso tem seu próprio tempo e eles se encaixam um embaixo do outro (até 4), com a barra de missão em cima; nada mais se sobrepõe.
+- **Rádio**: o nome da música aparece ao entrar no veículo ou ao trocar de música/estação e some depois de 5 s.
