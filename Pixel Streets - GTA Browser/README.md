@@ -38,28 +38,35 @@ Made by Claude Opus 5.5
 
 ## Controles
 
+Os comandos seguem o padrão do **GTA V** (PC e controle).
+
 | Tecla | Ação |
 |---|---|
 | **W A S D** / setas | Andar / dirigir |
 | **Shift** | Correr (a pé) · Nitro (no superesportivo) |
 | **F** | Entrar / sair / roubar veículo |
 | **Espaço** | Pular (a pé) · Freio de mão (no carro) |
-| **Clique** ou **E** | Atirar (segure para rajada) |
-| **1 / 2 / 3** | Pistola / Metralhadora / Bazuca |
-| **X** ou roda do mouse (a pé) | Trocar de arma |
+| **Clique** | Atirar (segure para rajada) · sem arma: **soco** |
+| **R** | Soco (a pé) |
+| **TAB** (segurar) | **Roda de armas**: o tempo desacelera e o mouse escolhe; soltar confirma. Toque rápido: próxima arma |
+| **1 / 2 / 3 / 4 / 5** | Punhos / Pistola / Colt Magnum / Metralhadora / Bazuca |
+| Roda do mouse (a pé) | Trocar de arma |
+| **E** | Buzina (no carro) · ação a pé (comprar na loja) |
+| **H** | Ligar / desligar faróis |
+| **Q** (segurar, no carro) | **Roda do rádio** com todas as músicas e a opção DESLIGADO. Toque rápido: próxima |
+| **.** / **,** | Próxima / anterior música · roda do mouse no carro também troca |
+| **W + S + A ou D** | **Zerinho**: acelerar e frear juntos virando o volante gira o carro 360° no lugar |
+| **Clique / botão direito** parado na bomba | Abastecer / consertar no posto |
 | **Mouse** | Olhar (visão 3D, clique para travar o cursor) |
-| **V** | Troca a câmera: 3ª pessoa → 1ª pessoa → perspectiva giratória → vista de cima (a pé ou no carro) |
+| **V** | Troca a câmera: 3ª pessoa → 3ª perto → 3ª bem perto → 1ª pessoa → perspectiva giratória → vista de cima (a pé e no carro) |
+| **'** (aspas, ao lado do 1) | Caixa de cheat: digite o código e Enter |
 | **Z / C** ou botão direito arrastando | Girar a câmera em perspectiva |
 | **+ / −** | Zoom da câmera em perspectiva |
-| **G** | Ligar / desligar faróis |
-| **Q** / roda do mouse | Próxima música |
-| **R** | Ligar / desligar o rádio |
-| **H** | Buzina |
 | **N** | Som liga/desliga |
-| **M**, **TAB** ou clique no minimapa | Abre / fecha o mapa em tela cheia (sem precisar do ESC) |
+| **M** ou clique no minimapa | Abre / fecha o mapa em tela cheia |
 | **Clique direito** no mapa | Marcar / desmarcar destino (GPS) |
 | **T** | Missão do veículo (táxi ou viatura) · T de novo encerra |
-| **ESC** | Menu |
+| **ESC** / **P** | Menu |
 
 ### Celular e tablet (touch)
 
@@ -67,7 +74,7 @@ Os controles na tela aparecem sozinhos em telas de toque:
 
 - **Joystick** à esquerda: andar / dirigir (empurrar até a borda corre).
 - **Arrastar o dedo** no resto da tela: olhar em volta (visão 3D).
-- Botões: **TIRO** (segure para rajada), **ENTRAR/SAIR**, **PULO/FREIO**, **CORRER/NITRO** (liga e desliga), **ARMA**, **BUZINA**.
+- Botões: **TIRO/SOCO** (segure para rajada; sem arma dá soco; parado na bomba do posto abastece), **ENTRAR/SAIR**, **PULO/FREIO**, **CORRER/NITRO** (liga e desliga), **ARMA**, **BUZINA**.
 - Barra de cima: **MAPA**, **CÂMERA** (de cima → 3ª pessoa → 1ª pessoa), **RÁDIO**, **MÚSICA**.
 - No mapa grande, **toque e segure** para marcar o destino do GPS.
 - Na visão de cima, tocar na tela atira na direção do toque.
@@ -382,7 +389,7 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 ## Controle (DualSense / DualShock / Xbox / genéricos)
 - Conecte por USB ou Bluetooth e **aperte qualquer botão** (exigência do navegador). Aparece "🎮 CONTROLE CONECTADO".
 - **R2 / L2** analógicos: acelerar e freio/ré, com a pressão dosando a força. **Analógico esquerdo**: andar (meio curso anda devagar, curso todo corre) e dirigir. **Analógico direito**: câmera.
-- **△/Y** entrar/sair · **✕/A** pular (a pé) e freio de mão · **○/B** freio de mão e voltar nos menus · **R1** atirar (a pé também R2 ou □) · **L1** nitro · **□/L3** buzina no carro · **L3** correr a pé · **← →** arma · **↑** rádio · **↓** missão · **R3** câmera · **Touchpad/View** mapa · **Options/Start** menu.
+- Layout do **GTA V**: **R2** atirar (sem arma: soco) e acelerar no carro · **L2** freio/ré · **○/B** soco · **✕/A** correr (no carro: nitro) · **□/X** pular (no carro: drive-by) · **△/Y** entrar/sair · **L1** segurar = roda de armas (analógico escolhe, tempo lento) · **R1** freio de mão · **L1+R1** drive-by · **L3** buzina · **D-pad ←** no carro: rádio (segurar = roda do rádio) · **D-pad →** no carro: faróis / a pé: ação na loja ou próxima arma · **↑** próxima música · **↓** missão · **Touchpad/View** toque = câmera, segurar = mapa · **R2+L2+direção** zerinho · no posto: **□** abastece, **○** conserta.
 - Menus navegáveis pelo controle: setas mudam o foco, ✕ confirma, ○ volta, ← → ajustam os sliders.
 - **Vibração** (Chrome/Edge): batidas proporcionais ao impacto, pouso de rampa, tiros (pistola, rajada da SMG, coice da bazuca), explosões pela distância, levar tiro ou atropelamento, trovão próximo (com atraso do som), tremor em terra/grama, nitro, motor da moto e barco.
 - **CONFIG → CONTROLE**: status do controle, intensidade da vibração, sensibilidade da câmera, zona morta, inverter eixo Y e botão TESTAR VIBRAÇÃO. Tudo salvo no navegador.
@@ -473,3 +480,179 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 - **CONFIG → RESTAURAR PADRÕES** (no fim do painel): volta volumes (85/80/85%), som, sombras, bloom, reflexos, trânsito 20%, pedestres 75% e controle (vibração 100%, sensibilidade 100%, zona morta 15%, sem inverter) ao padrão. Pede um segundo clique para confirmar.
 
 - Ao começar um **jogo novo**, o save antigo do navegador (do sistema anterior) é apagado e o botão dele some.
+
+## Atualização grande (novembro)
+### Motos
+- Rodas das motos inteiras; o boneco 3D saiu. O piloto agora é um **personagem 2D** sentado na moto.
+- **Roubar a moto**: o piloto sai correndo. **Um tiro na moto**: o piloto cai, levanta e vai embora (não morre).
+### Tiros e armas
+- Pistola e metralhadora precisam de **3 tiros** para matar; quem leva tiro e sobrevive foge. **Tiro na cabeça mata na hora** ("TIRO NA CABEÇA"). Bazuca continua matando na hora.
+- Nova arma: **Colt Magnum** (tecla **4**): 1 tiro mata, coice forte, recarga lenta. Aparece nos becos como as outras armas.
+### Personagens
+- Todos os personagens 2D foram refeitos com o **dobro de pixels** (32×48): rosto com olhos, sobrancelhas, nariz e boca, boné com aba, camisa com gola e sombra, cinto, sapatos com sola, cabelo comprido, **óculos** e **colar** em alguns NPCs.
+- Pronto para a futura loja de roupas: cores de **boné/chapéu, camisa, calça e sapato** e **óculos/colar** liga-desliga (paleta do jogador, salva no arquivo de save).
+### Praia
+- **Areia com textura granulada** e **espuma/ondinhas** na beira do mar e nas margens dos rios.
+- **Gente caminhando pela praia** (mais de dia, poucas à noite); vão embora quando chove.
+- **1 ou 2 fogueiras** na praia com gente em pé olhando o fogo: 1–2 pessoas de dia, 5–6 à noite.
+- **Farol** na ponta da praia sem prédios, no fim de um banco de areia; à noite a luz acende. Chegar na porta leva ao topo; a portinha do topo desce. Pular do parapeito: queda mata, cair na água afoga.
+### Cidade
+- **Cemitério** (estilo Los Santos): muro, portões de grade abertos, árvores secas retorcidas, lápides variadas (algumas tortas), mausoléu com porta (futuramente entrável) e obelisco no centro. Em cima, nuvem negra permanente e pouco sol (sem chuva) e **neblina** só nele. (Na cidade 7×7 ele não cabe.)
+- **Delegacia** (prédio azul e branco "POLÍCIA"). **Morreu → renasce na porta do hospital; preso → na porta da delegacia** (se não existir, lugar aleatório).
+- Algumas casas têm **piscina** (cair nela não mata) e **churrasqueira**, algumas acesas soltando fumaça.
+- **Letreiros de neon com texto**: HOTEL, CAFETERIA, BAR e BOATE com nomes sorteados (COLONY, FLAMINGO, PARADISO, ATLANTIS…).
+- **Casa segura** com interior mais caprichado (estante, quadros, luminária, móveis arredondados).
+### Céu e eventos
+- **Helicóptero e avião** passam de vez em quando pela cidade (alturas diferentes, nunca colidem), com som de motor abafado e luzes piscando.
+- **Perseguições aleatórias**: às vezes uma viatura persegue um carro pela cidade; ela atira, bate, o carro pode explodir ou sumir no horizonte. Não deixa você procurado.
+- **TV da casa segura**: perto da TV aparece "F Assistir TV". A câmera vai para uma vista aérea estilo telejornal ("PIXEL NEWS · AO VIVO", manchete e letreiro correndo, sem HUD) mostrando **uma tempestade se formando** ou **uma perseguição policial**. F de novo desliga: o clima volta ao que estava e a polícia/carro somem.
+### Cheats (CONFIG → CHEATS)
+- Vida infinita, munição infinita, veículo nunca explode, nunca ser procurado e **+ $1000**. Com qualquer cheat usado na partida, **não dá para salvar**.
+### Modo mobile
+- Em celular o jogo avisa **"MODO MOBILE"** e gera a cidade **7×7** (sombras e reflexos começam desligados). A opção "Mobile · 7×7" também existe no tamanho da cidade.
+
+## Correções (desempenho e piscadas)
+- **Vazamento dos pilotos de moto**: algumas motos saíam do jogo sem limpar o boneco 2D, que ficava parado no lugar (o "rastro") e se acumulava (centenas em poucos minutos, derrubando o FPS). Agora todo piloto fica numa lista e é apagado assim que a moto some.
+- **Piscadas (z-fighting)**: varredura automática de todas as superfícies da cidade.
+  - Câmeras de rua (1ª/3ª pessoa e capô) com plano de corte próximo maior (25–30 cm em vez de 5–15 cm): profundidade 2 a 6 vezes mais precisa à distância.
+  - Pátio das indústrias não fica mais exatamente sobre a calçada; estacionamentos dos marcos (shopping etc.) acima do piso do marco; caminhos e covas do cemitério, deck da piscina e grelha da churrasqueira separados das superfícies de baixo.
+
+## Atualização v67 — soco, controles GTA V, posto de combustível e zonas de procurado
+### Soco
+- Sem arma (ou com **PUNHOS** escolhido na roda / tecla **1**): **R**, **clique** ou **○** dão um soco com avanço do corpo, som de golpe e faíscas.
+- Pedestre: 1º soco faz fugir, 2º derruba no chão, 3º mata. Policial a pé leva o soco e você fica procurado. Soco em carro amassa um pouco (e viatura também chama a polícia).
+- Em 1ª pessoa aparece um punho em pixel art na tela que avança a cada soco.
+- O HUD mostra **PUNHOS** quando você está de mãos vazias.
+### Controles iguais ao GTA V
+- Teclado, mouse e controle remapeados (tabela acima e janela COMANDOS / CONFIG → CONTROLE atualizadas).
+- **Roda de armas** (segurar TAB ou L1) e **roda do rádio** (segurar Q ou D-pad ←): o jogo entra em câmera lenta enquanto ela está aberta, ícones em pixel art, munição de cada arma, armas que você não tem ficam apagadas, ponteiro mostra a direção.
+- O rádio ganhou **próxima / anterior** com **.** e **,** e a opção **DESLIGADO** dentro da roda.
+### Rádio contínuo
+- Trocar de carro não pula mais a música: ela continua exatamente de onde parou.
+### Motos
+- Os pilotos (pedestres e o jogador) desceram ~50% no assento: as pernas ficam na altura das rodas, parecendo sentados na moto.
+### Zerinho
+- Acelerar e frear ao mesmo tempo (W+S ou R2+L2) com a direção virada faz o carro girar 360° no lugar, com fumaça dos pneus, marcas de borracha no asfalto e vibração. Funciona também na moto (gira um pouco mais devagar). Gasta mais combustível.
+### Combustível
+- Cada veículo que você dirige tem tanque (barra laranja **COMBUSTÍVEL** abaixo da vida do carro). Carros roubados vêm com 40–100%; viaturas, cheias.
+- Acelerar, nitro e zerinho gastam mais. Um tanque dura cerca de 15 minutos acelerando. Abaixo de 15% a barra pisca e aparece aviso; sem combustível o carro só anda na banguela.
+- O nível do tanque vai junto no save.
+### Posto de combustível (novo prédio comercial)
+- 1 a 3 postos por cidade (depende do tamanho), com bandeira aleatória (PIXOIL, NEOGÁS, TURBO, SOLAR): cobertura com faixa colorida e luzes, 2 ilhas com 4 bombas (telinhas e mangueiras), totem de preços, loja de conveniência com vitrine e letreiro "CONVENIÊNCIA 24H", gelo, gás, ar-condicionado no teto e estacionamento em volta. Ícone laranja de bomba no minimapa e no mapa, e nome **POSTO** no mapa grande.
+- **Pare ao lado de uma bomba**: aparece o aviso com os preços. **Clique / □** abastece ($0,60 por %; se faltar dinheiro, abastece o que der) e **botão direito / ○** conserta o carro (preço pelo dano).
+- **Explode muito forte**: 2 tiros numa bomba (1 de Magnum), batida forte de carro na bomba, ou explosão por perto (bazuca, carro explodindo). São **3 explosões em sequência** (bomba, bomba, cobertura), cada uma com 3× o tamanho e a quantidade de fogo e fumaça da explosão de carro, raio de dano bem maior, luz forte e tremor de tela.
+- Depois o posto fica **todo preto e chamuscado** (como os carros queimados), com manchas de queimado no chão e fogo e fumaça nas bombas por cerca de 30 segundos. As bombas e a loja ficam fora de uso e o posto **reabre depois de um dia no jogo**. Se foi você, a polícia vem atrás.
+### Loja de conveniência (novo interior)
+- Entre pela seta amarela na porta da loja. Lá dentro: piso xadrez, balcão com caixa registradora, prateleira de cigarros e bebidas atrás do caixa, 2 gôndolas cheias de produtos, 5 geladeiras de vidro iluminadas, máquina de café/raspadinha, caixa eletrônico, cone de piso molhado, letreiro "ABERTO" na vitrine, plaquinha do lanche e luminárias. O caixa é um personagem uniformizado que acompanha você com o olhar.
+- **Comprar comida**: sem arma, no balcão, **E / F / D-pad →** compra um lanche por $15 e recupera 50 de vida.
+- **Assalto**: com uma arma na mão, mire no caixa. Ele treme de medo e uma barra de ASSALTO enche em ~3 s. Ao completar, você leva $180–420 (bem menos se o mesmo posto foi assaltado há pouco). Atirar dentro da loja acelera o assalto; matar o caixa rende o dinheiro da gaveta.
+- **A polícia vem na hora**: o caixa aperta o alarme e em 7 s a polícia invade (ou assim que você sair), com viaturas chegando ao posto e você já procurado. Socar o caixa também dispara o alarme. Não dá pra entrar na loja estando procurado.
+### Nível de procurado por região
+- Quando você **escapa** da polícia, fica uma **zona vermelha** (raio de 2 quarteirões, 4 de diâmetro) no local do crime, desenhada no minimapa e no mapa grande como uma mancha vermelha pulsante (como a mancha azul da chuva).
+- A polícia guarda a sua **roupa** e **todos os veículos** em que te viu durante a perseguição (a pé também conta).
+- Entrar na zona com **a mesma roupa e o mesmo veículo** = perseguição imediata. Só **um dos dois** igual = você tem **10 segundos** pra sair da zona antes de ser reconhecido. Roupa e veículo trocados = passa despercebido.
+- No HUD, ao lado de onde aparece PROCURADO, ficam um ícone de **camisa** e um de **carro**: aceso em vermelho quando ainda bate com o crime, apagado quando você trocou. Mostra também o estado: tempo até a zona sumir, "NA ZONA", "SUSPEITO 7s" (piscando) ou "DISFARÇADO".
+- Ficando longe da zona por **1 hora no jogo** (1 minuto real), ela some. As zonas vão junto no save.
+
+## Atualização v68
+- **Cheats do GTA San Andreas**: digite o código direto durante o jogo (como no SA), ou aperte **'** para abrir a caixa de cheat, ou faça a sequência do PS2 no controle. A lista completa também está em **CONFIG → CHEATS**. Qualquer cheat bloqueia salvar até um jogo novo.
+
+| Código | Efeito | Controle (PS2) |
+|---|---|---|
+| HESOYAM | Vida cheia, +$250.000, conserta e enche o tanque do carro | R1 R2 L1 ✕ ← ↓ → ↑ ← ↓ → ↑ |
+| AEZAKMI | Nunca ser procurado (liga/desliga) | ○ → ○ → ← □ △ ↑ |
+| BAGUVIX | Vida infinita (liga/desliga) | ↓ ✕ → ← → R1 → ↓ ↑ △ |
+| FULLCLIP | Munição infinita (liga/desliga) | L1 R1 □ R1 ← R2 R1 ← □ ↓ L1 L1 |
+| LXGIWYL | Armas 1: pistola e metralhadora | R1 R2 L1 R2 ← ↓ → ↑ ← ↓ → ↑ |
+| KJKSZPJ | Armas 2: + Colt Magnum | R1 R2 L1 R2 ← ↓ → ↑ ← ↓ ↓ ← |
+| UZUMYMW | Armas 3: + bazuca | R1 R2 L1 R2 ← ↓ → ↑ ← ↓ ↓ ↓ |
+| TURNUPTHEHEAT | Polícia na cola | R1 R1 ○ R2 ← → ← → ← → |
+| TURNDOWNTHEHEAT / ASNAEB | Limpa o procurado e as zonas vermelhas | R1 R1 ○ R2 ↑ ↓ ↑ ↓ ↑ ↓ |
+| CPKTNWT | Explode todos os carros por perto | R2 L2 R1 L1 L2 R2 □ △ ○ △ L2 L1 |
+| AUIFRVQS | Chuva | R2 ✕ L1 L1 L2 L2 L2 ○ |
+| AFZLLQLL | Sol (limpa chuva e tempestade) | R2 ✕ L1 L1 L2 L2 L2 ↓ |
+| SPEEDFREAK | Nitro no carro atual | — |
+
+  Enquanto você digita um código, as letras a partir da 3ª não acionam comandos do jogo (W A S D continuam andando). A 1ª e a 2ª letra ainda funcionam normalmente; por exemplo, o F de FULLCLIP entra/sai do carro. A caixa **'** evita isso.
+- **Câmeras novas**: além da 3ª pessoa padrão, **3ª pessoa perto** e **3ª pessoa bem perto** (no carro, câmera colada na lataria; a pé, o personagem bem grande na tela). O **V** passa por elas antes da 1ª pessoa.
+- **Etiqueta flutuante na bomba**: ao chegar perto do posto de carro, aparece em cima da bomba mais próxima um balão laranja com os botões certos: **□/○** no DualSense/DualShock, **X/B** no Xbox, **clique/botão direito** no teclado e mouse, com o preço de abastecer e consertar e o lembrete "pare ao lado da bomba".
+- **Pilotos de moto ainda mais baixos**: a cintura fica na altura do tanque.
+- **Roda do rádio** mostra 10 músicas (mais a opção DESLIGADO).
+- **Som dos carros que passam** tocando música 30% mais baixo.
+- **Correção**: nas esquinas entre rua de asfalto e estrada de terra (como ao lado do cemitério na zona rural), o canto arredondado da calçada deixava aparecer um pedaço quadrado de asfalto; agora ali é terra.
+
+## Atualização v69 — postos estilo Vice City (synthwave)
+- No estilo **synthwave/vaporwave**, os postos ganham o visual do GTA Vice City: duas faixas grossas de **neon** em volta da cobertura, metade **rosa/magenta** e metade **ciano**, com um brilho colorido no chão debaixo de cada metade.
+- Paleta pastel compatível: cobertura e loja em creme/pêssego, pilares quadrados cor de salmão, bombas prateadas com faixa **vermelha e azul** e base pêssego, placas com fundo roxo escuro e letras rosa.
+- A loja de conveniência ganha neon **verde-menta** no contorno do telhado e um neon rosa acima da vitrine.
+- Depois de explodir, o posto continua todo preto, sem neon.
+
+## Atualização v70
+### Shopping center novo (com interior de 2 andares)
+- **Fachada nova**: prédio grande de 2 andares com pórtico central todo de vidro (caixilhos), marquise com pilares na entrada, alas laterais mais altas (CINEMA e MODA), faixas de vidro nos dois andares, faixa colorida entre os pisos, claraboia e máquinas no teto e letreiro **SHOPPING PIXEL**. Estacionamento em volta.
+- **No synthwave/vaporwave** (inspirado no North Point Mall do GTA Vice City): paredes rosa-pastel e azul-turquesa, contorno de **neon vermelho** no prédio e no pórtico, letreiro vermelho. Por dentro: piso xadrez rosa/roxo, paredes lilás e neons **ciano e rosa** nas vitrines, na galeria, na claraboia e nos corrimãos da escada rolante.
+- **Interior**: entre pela seta amarela na porta. **Térreo**: corredor com fonte, canteiros com palmeiras, bancos, luminárias, galeria do 1º andar vista de baixo e **escada rolante** no fim do corredor. Subindo, o **1º andar** tem vão central com corrimão de vidro, de onde se vê o térreo lá embaixo. Para descer, pegue a escada rolante de novo.
+- **16 lojas** (8 por andar) com fachada, vitrine, porta e letreiro: MODA PIXEL, CONVENIÊNCIA, GAMES, TECH, LIVROS, CAFÉ, ÓTICA, JOIAS, SAPATOS, BRINQUEDOS, MÚSICA, ESPORTES, PERFUMES, PIZZA, FARMÁCIA e CINEMA. As de vitrine têm produtos e prateleiras; há clientes passeando.
+- **CONVENIÊNCIA** (térreo): no balcão, **E / F / D-pad →** compra lanche ($15, +50 de vida).
+- **MODA PIXEL** (térreo): araras, manequins, espelho e vendedora. No balcão abre o **PROVADOR**, onde você troca a cor da **camisa, calça e calçado**, coloca ou tira **boné** (com cor), **óculos escuros** (várias lentes) e **colar** (ouro, prata, rosa, azul). Tem prévia do personagem de frente e de lado; cada peça trocada custa $10. Trocar de roupa também despista a polícia nas **zonas vermelhas**.
+- Não dá para entrar no shopping estando procurado.
+### Fantasma do cemitério (easter egg)
+- Perto do cemitério pode surgir um **fantasma**: é um pedestre comum, mas todo em branco e cinza, translúcido, com brilho, tremulando e **flutuando acima do chão**. De dia é raro; à noite é bem mais comum.
+- Ele vaga entre os túmulos, geme (som) e persegue quem chega perto. Se encostar, **tira vida** (menos se você estiver dentro do carro).
+- **Se ele te matar** ("ASSOMBRADO"), dá tempo de ver o fantasma **voltando à vida**: ele ganha cor aos poucos, entre brilhos, vira uma pessoa de verdade e sai andando.
+### Água viva
+- **Mar e rios limpos** ficaram **transparentes**: dá para ver o fundo de areia com pedras e algas. O fundo do mar afunda e escurece até o azul profundo.
+- **Ondas**: linhas de reflexo que se movem pela superfície do mar e dos rios.
+- **Cardumes**: grupos de peixes nadando debaixo d'água, no mar e nos rios limpos (o rio poluído continua sem vida).
+### Céu e clima
+- **Nuvens esparsas** no céu limpo: a cobertura muda sozinha de 0% a 100% ao longo do dia. No máximo fica um pouco abaixo da nuvem de uma célula de chuva, só para "sujar" o céu.
+- **Poças com sol forte**: o reflexo fica mais fraco (mais transparente) de dia quando não está chovendo em cima de você.
+### Farol
+- O caminho de areia até o farol agora é **orgânico**: faz uma curva suave, abre em leque onde encosta na praia (sem o "T") e tem **pedras cinzas** de vários tamanhos ao longo das bordas, com espuma acompanhando a curva. O mapa também desenha a curva.
+### Cidade
+- **Semáforos novos**: caixa **amarela** com **3 lentes** (vermelho, amarelo e verde), e só a cor ativa acende. O pisca-alerta da tempestade pisca a lente amarela.
+- **Calçada contínua** em cruzamento em T de ruas estreitas: o lado sem rua não tem mais aqueles "dentes" na calçada.
+- **Domos mais redondos** (farol, prefeitura, shopping e parabólicas) com mais polígonos.
+- **Posto no mapa**: o ícone laranja aparece mesmo com o posto longe (antes só aparecia depois de passar perto).
+### Motos
+- O piloto não "pula" mais ao inclinar a moto nas curvas.
+
+## Atualização v71 — menus mais legíveis
+- Os **menus** (MENU, CONFIG, COMANDOS, OFICINA e PROVADOR) agora usam uma **fonte normal** (sem pixel), bem mais fácil de ler. As cores, bordas, botões e o estilo continuam os mesmos. O HUD do jogo (vida, dinheiro, avisos, mapa) continua com a fonte pixelada.
+- A lista de **cheats do GTA SA** (códigos e sequências do controle) saiu do CONFIG e foi para a janela **COMANDOS**, numa seção própria. No CONFIG ficaram só as caixinhas de cheat e o botão +$1000.
+
+## Atualização v72
+- **Todos os textos da interface sem pixelização**: HUD (vida, dinheiro, relógio, avisos, procurado, velocímetro, rádio), MONITOR (F3), rodas de arma/rádio, botões de toque, notícias da TV, e os textos do minimapa e do mapa grande agora usam fonte normal. Cores e estilo continuam os mesmos. Os letreiros dentro do mundo 3D (placas, neons, fachadas) continuam no estilo pixel.
+- **Cemitério sem a nuvem escura própria**: o céu sobre o cemitério agora segue as nuvens ralas normais do céu limpo. A neblina no chão do cemitério continua.
+- **Correção na água do rio**: um trecho de rio perto da zona poluída ficava inteiro escuro e sem ondas (o jogo tratava o bloco todo como poluído). Agora isso é decidido pedaço por pedaço: só onde a água está suja o fundo fica marrom e sem ondas, e no resto a água fica transparente e com ondas. A água também não escurece mais onde dois trechos se sobrepõem.
+
+## Atualização v73 — janela COMANDOS por abas
+- A janela **COMANDOS** agora tem **botões por grupo**: A PÉ, VEÍCULO, ARMAS, CÂMERA E MAPA, RÁDIO E SOM, JOGO, CONTROLE, CHEATS e CELULAR. Cada botão mostra só aquele grupo e **TUDO** mostra a lista completa. Funciona com mouse, toque e controle (setas + ✕).
+- O **mapa completo dos botões do controle** saiu do CONFIG e foi para COMANDOS → CONTROLE. No CONFIG → CONTROLE ficaram só os ajustes: status do controle, vibração, sensibilidade, zona morta, inverter eixo e testar vibração.
+
+## Atualização v74 — desempenho e ajustes
+### Otimização do reflexo das poças
+- O reflexo agora é atualizado **a cada 2 frames** (na poça não dá pra perceber a diferença) e em **resolução menor** (36% da tela; 30% na vista de cima).
+- O espelho só desenha os **quarteirões próximos** (até ~230 m da câmera).
+- **Pedestres, sombras dos pedestres, partículas (fumaça, faíscas, chuva de vidro…)** não entram mais no reflexo: são centenas de objetos pequenos que custavam caro e quase não apareciam na poça.
+- Na prática, o custo extra do chão molhado caiu bastante, e o visual continua igual.
+### Cemitério
+- O **portão dos fundos**, que abria direto contra o mausoléu e aparecia torto, foi **removido**: o muro dos fundos agora é contínuo. A entrada é só pelo portão da frente, com o arco e o nome.
+- **Armas escondidas entre os túmulos**: Colt Magnum, metralhadora, bazuca e um kit de vida. São um motivo para entrar… e para fugir do fantasma.
+### Controle
+- **Correr**: segure **✕ / A** (ou aperte o L3).
+- **Mapa**: agora é **SHARE / VIEW / BACK** (ou o touchpad, se você usar). A **câmera** é no **R3**.
+### Céu
+- **Mais nuvens** no céu limpo: a cobertura varia de ~30% a 100% (antes podia chegar perto de zero), com nuvens mais cheias, sempre um pouco abaixo da nuvem de chuva.
+
+## Atualização v75 — nuvens de fundo separadas da chuva
+- As nuvens do céu limpo agora são uma **camada própria, em escala menor**: muitos fiapos e flocos pequenos, brancos e translúcidos, que se movem devagar. Elas **não usam mais o mesmo desenho das nuvens de chuva**.
+- **0%** = só alguns fiapos; **100%** = céu bem "salpicado" de nuvenzinhas, mas ainda com o azul aparecendo. Isso é bem diferente da nuvem grande e escura de uma célula de chuva ou da tempestade, que continuam do jeito que eram.
+- A cobertura muda sozinha ao longo do dia (~30% a 100%). Onde há nuvem de chuva, as nuvenzinhas somem por baixo dela.
+
+## Atualização v76 — radar giratório e barras compactas
+- O **minimapa (radar) gira** junto com o jogador: a frente de para onde você olha/dirige fica sempre **para cima**, como no GTA. A rotação é suavizada, sem tremer. A seta do jogador fica fixa apontando para cima, a bússola **N** gira mostrando onde é o norte, a seta amarela do destino fora do radar e o clique direito para marcar destino acompanham a rotação. O mapa grande continua com o norte para cima.
+- As barras **VEÍCULO** e **COMBUSTÍVEL** ficam **lado a lado** e com **metade da largura**, acima da barra de vida, para ocupar menos espaço na tela. Elas continuam medindo de 0 a 100% normalmente.
+
+## Atualização v77
+- A **barra de vida** agora tem exatamente a mesma largura total das duas barras de cima (VEÍCULO + COMBUSTÍVEL): as bordas da esquerda e da direita ficam alinhadas, no PC e no celular.
