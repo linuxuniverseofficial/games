@@ -699,3 +699,29 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 ## Atualização v85
 - No menu, a opção virou só **Tempestade ativa**, com uma linha curta: chega 1h de jogo (1 min real) depois de marcar e volta de tempos em tempos.
 - A explicação da chuva foi para uma nova aba **FAQ** na janela COMANDOS, junto com respostas rápidas sobre previsão do tempo, tempestade, seed, como salvar e o que fazer se o jogo estiver pesado.
+
+## Atualização v86
+- **Balões flutuantes no shopping**: ao chegar perto da **MODA PIXEL** aparece um balão rosa em cima da vendedora: "chegue no balcão e aperte **E**" (no controle, **→**). No balcão ele muda para "**ABRIR O PROVADOR**", com o que dá pra trocar e o preço. A **CONVENIÊNCIA** ganhou um balão verde igual para o lanche.
+
+## Atualização v87 — tempestade natural, área de spawn e HUD enxuto
+### Geral
+- **Carros e pedestres** agora aparecem e somem num raio de **3 quarteirões** em volta do jogador (antes ~4 a 4,5), em vez de encher uma área enorme.
+- **Minimapa girando**: os cantos fora da cidade agora mostram o **mar azul** (do lado do litoral) e a cor do entorno, em vez de preto.
+- **Tempestade natural**: o tick "Tempestade ativa" saiu do menu. Cada cidade (seed) tem a sua **chance de tempestade**, sorteada de tempos em tempos (a cada 5 a 15 min reais).
+  - Quando ela vai se formar, primeiro o céu fica **estranhamente limpo**: as chuvas somem aos poucos, as nuvenzinhas desaparecem e nenhuma nuvem nova se forma.
+  - Só depois vem a **previsão** ("TEMPESTADE EM 1H"), o céu escurece a partir de 50% coberto e a tempestade cai sobre a cidade toda.
+  - Quando ela se dissipa, o clima volta ao normal.
+- **Cheat AUIFRVQS** agora chama uma **tempestade** nesse mesmo formato: limpa o céu aos poucos, congela as nuvens, a tempestade chega (~25 s depois do aviso) e, quando ela passa, o cheat se desliga sozinho e o clima normaliza. O **AFZLLQLL** cancela tudo e deixa o céu limpo.
+- A barra de vida mostra só **VIDA** (sem número): a própria barra já diz quanto falta.
+### PC
+- Sumiram da tela: o aviso "F para entrar no veículo", o "CIDADE MODERN · SEED" do canto, o aviso de seed no começo do jogo e os botões CONFIG e COMANDOS (ficam dentro do MENU).
+- O **relógio** mostra só os dígitos, em 24h (ex.: 21:07).
+- O **velocímetro** foi para o canto inferior direito, à esquerda do minimapa.
+### Celular
+- Os botões de toque somem quando o menu, CONFIG, COMANDOS, a oficina ou o provador estão abertos, e voltam no jogo.
+- No mapa grande, os nomes ficam **abreviados** (PREF, SHOP, CEM, HOSP, DP, UNIV, EST, MERC, IND, ARR).
+- O **analógico** ficou com metade do tamanho visual, mas a área de toque continua a mesma.
+- As barras de **vida, veículo e combustível** ficam **embaixo do minimapa**, com a mesma largura dele.
+
+## Atualização v88
+- **Raios só na tempestade**: a chuva comum agora é só água e vento, sem raios nem trovões, por mais forte que seja. Raios, trovões e clarões ficam exclusivos da tempestade.
