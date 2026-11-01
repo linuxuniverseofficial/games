@@ -390,9 +390,9 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 
 ## Previsão do tempo e tempestade
 - A tempestade **não sai mais sozinha** (não é mais a 6ª célula). As células de chuva normais continuam aleatórias.
-- **Menu → MUNDO → TEMPESTADE**: escolha "Prevista: chega em 1h de jogo (1 min)". Aparece em azul **"PREVISÃO DO TEMPO: TEMPESTADE EM 1H"** com a direção de onde ela vem, depois avisos de 30 min e 10 min. A partir dos 35 min as nuvens escuras surgem no horizonte daquele lado e avançam até cobrir a cidade.
+- **Menu → MUNDO → tick "Tempestade"** (logo abaixo de "Chuva"): marcado, aparece em azul **"PREVISÃO DO TEMPO: TEMPESTADE EM 1H"** com a direção de onde ela vem, depois avisos de 30 min e 10 min. A partir dos 35 min as nuvens escuras surgem no horizonte daquele lado e avançam. **Deixando marcado, ela vem e vai alternando**: depois que uma passa, a previsão avisa a próxima (3 a 6 horas de jogo depois). **Desmarcar** cancela a previsão ou faz a tempestade em andamento se dissipar.
 - O céu vira um **degradê de duas cores**: o horizonte do lado de onde a tempestade vem fica escuro e o lado oposto continua claro, com as nuvens escondendo a transição. A frente escura avança do horizonte: na hora marcada está bem em cima da cidade e, em ~30 min de jogo, **fecha o céu inteiro**, até o horizonte do lado oposto (aviso "TEMPESTADE · céu totalmente fechado"). Só então começa a chuva pesada, com raios e trovões.
-- Ao enfraquecer, o céu começa a limpar **pelo mesmo lado** de onde ela veio e a parte escura atravessa o céu até sumir no lado oposto. Com chuva ligada, ela se quebra em pancadas isoladas. Depois a opção volta para "Sem tempestade". Funciona mesmo com a chuva comum desligada.
+- Ao enfraquecer, o céu começa a limpar **pelo mesmo lado** de onde ela veio e a parte escura atravessa o céu até sumir no lado oposto. Com chuva ligada, ela se quebra em pancadas isoladas. Funciona mesmo com a chuva comum desligada.
 - **Chuva normal**: cada célula nova agora é anunciada antes de se formar ("chuva se formando a nordeste em ~30 min · vindo na sua direção" ou "bem aqui"). A célula leva alguns minutos para aparecer.
 - Os avisos da previsão aparecem numa caixa azul no centro, um pouco abaixo dos avisos normais.
 
@@ -402,3 +402,42 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 - **4 fases**, uma por noite em sequência: **nova → crescente → cheia → minguante** (a fase inicial depende da seed). Desenhadas no padrão do hemisfério sul: a crescente aparece iluminada à esquerda e a minguante à direita. A lua nova fica quase invisível.
 - A claridade da noite muda com a fase: lua cheia ilumina bem mais, lua nova deixa a cidade mais escura. Com a lua alta, a luz da noite vem da direção dela.
 - Às 18:30 aparece em azul o aviso da noite, por exemplo "🌕 HOJE À NOITE: LUA CHEIA". O relógio mostra o ícone da fase durante a noite. A contagem dos dias é salva junto com o jogo.
+
+## Asfalto molhado e poças com reflexo
+- **Chão molhado:** depois que chove, o chão vai molhando aos poucos onde a célula de chuva passou (ruas, calçadas e estradas de terra) e seca devagar quando a chuva para. Durante a tempestade a cidade toda fica molhada.
+- **Asfalto molhado:** ganha um brilho de espelho fraco. Nas **poças** o reflexo é forte, como um espelho.
+- **Reflexo real:** a cena é renderizada espelhada, então aparecem prédios, céu, letreiros de neon, postes acesos e faróis dos carros, de dia, à noite e também no estilo synthwave/vaporwave.
+- **Gotas:** enquanto chove, as gotas fazem anéis que distorcem o reflexo nas poças.
+- **Tamanho das poças:** nas calçadas são menores (escoam melhor); na terra ficam barrentas.
+- **CONFIG → GRÁFICOS → "Reflexos nas poças e no asfalto molhado":** liga e desliga o efeito. Desligar deixa o jogo mais leve em PCs fracos e celulares.
+
+## Salvar / carregar por arquivo
+- O jogo **não salva mais sozinho no navegador**. No MENU (ESC) use **SALVAR JOGO (ARQUIVO)**: baixa um `.psave` (texto JSON) com seed, estilo, posição, vida, dinheiro, armas, dia/hora, carros da garagem, itens pegos e saltos feitos.
+- **CARREGAR ARQUIVO** (no menu inicial ou em jogo) escolhe o `.psave` e volta exatamente de onde parou — funciona em qualquer navegador/PC, sem depender de cookies.
+- Se ainda existir um save antigo do navegador, aparece **CARREGAR SAVE ANTIGO (NAVEGADOR)** para não perder o progresso (ele não é mais atualizado).
+- Ao fechar a aba com mais de 1 min sem salvar, o navegador pergunta se quer mesmo sair.
+- **Casa segura**: entrar restaura a vida e conserta o veículo com que você chegou (se estiver por perto); ela **não salva** mais — o aviso lembra de salvar pelo menu.
+
+## Ajustes de mundo (CONFIG → MUNDO)
+- **Trânsito** e **Pedestres** saíram do menu inicial e foram para o CONFIG (valem na hora e ficam salvos).
+- Nova escala: trânsito padrão **20%** (100% agora = metade do máximo antigo); pedestres padrão **75%** (= quantidade padrão antiga; 100% ≈ +33%). Polícia: 1 viatura até 50%, 2 até 90%, 3 acima.
+
+## Outras correções
+- Poças e asfalto molhado **secam em ~1h de jogo** depois que a chuva passa (antes levava mais de 4h). Desligar os reflexos em PC fraco: CONFIG → GRÁFICOS.
+- Entrada das indústrias não tem mais poste plantado na frente do portão.
+- Modelos revisados para a câmera de rua: pórticos (prefeitura/banco) com a face de baixo da viga e do frontão, marquises do hospital e do mercado, cornijas, toldos, placas, neon, aparelhos de ar, postes, semáforos, quiosques, píeres, garagens e o assoalho dos carros agora fechados por baixo (~3% a mais de polígonos).
+
+## Ruas de neon (synthwave)
+- Os neons das fachadas (barrinhas coloridas, faixas nos andares, contornos no topo e letreiros) seguem um **plano de ruas**: ruas retas de ponta a ponta.
+- A **rua da praia é sempre de neon**, com neon reforçado (praticamente todo prédio tem barrinhas, e muitos têm letreiros e faixas). Depois vêm paralelas a ela a cada ~1/3 da cidade.
+- Entre duas paralelas de neon entram 1 ou 2 **trechos perpendiculares** que param uma quadra antes de encostar nelas, então as ruas de neon nunca se cruzam.
+- **Toda rua que cruza uma rua de neon fica sem neon nenhum.** O plano muda com a seed.
+
+## Save completo (clima + CONFIG) e pontes
+- O arquivo `.psave` agora guarda também **o clima inteiro**: chuva/tempestade ligadas, células de chuva em andamento, tempestade (previsão, frente de nuvens, cobertura, fase), vento e o **chão molhado/poças**. Carregar continua exatamente com o mesmo tempo.
+- O save também leva as **configurações do CONFIG** (volumes, som, sombras, bloom, reflexos, trânsito, pedestres, controle). Ao carregar o arquivo, elas são aplicadas e ficam salvas nesse navegador.
+- **Pontes**: agora há água correndo por baixo delas, e as margens embaixo da ponte têm muro de canal.
+
+## Visual arredondado (agora padrão)
+- **Esquinas com curva suave**: entre ruas estreitas o canto vira um quarto de círculo de calçada; nas avenidas o canto da calçada é cortado em arco. Carros, pedestres, mapa e poças seguem a curva.
+- **Postes** com tubo cilíndrico, braço curvo e luminária oval; **semáforos** cilíndricos com tampas arredondadas e luz em esfera.
