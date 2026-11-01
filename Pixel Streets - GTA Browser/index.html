@@ -233,6 +233,7 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
     </div><div class="row" style="margin-top:12px;gap:18px"><div class="checks"><label><input type="checkbox" id="pad_inv">Inverter eixo vertical da câmera</label></div><button class="btn" type="button" id="padTest" style="margin-left:auto">TESTAR VIBRAÇÃO</button></div>
     <div class="padmap"><div><kbd>R2</kbd><kbd>L2</kbd>acelerar · freio/ré (pressão dosa)</div><div><kbd>ANALÓG. ESQ.</kbd>andar · dirigir</div><div><kbd>ANALÓG. DIR.</kbd>olhar / girar câmera</div><div><kbd>△ / Y</kbd>entrar / sair do veículo</div><div><kbd>✕ / A</kbd>pular · freio de mão</div><div><kbd>○ / B</kbd>freio de mão · voltar</div><div><kbd>R1</kbd>atirar · a pé também <kbd>R2</kbd><kbd>□</kbd></div><div><kbd>L1</kbd>nitro</div><div><kbd>□ / X</kbd><kbd>L3</kbd>buzina no carro · <kbd>L3</kbd>correr a pé</div><div><kbd>← →</kbd>trocar arma</div><div><kbd>↑</kbd>rádio: próxima música (a pé liga/desliga)</div><div><kbd>↓</kbd>missão do veículo</div><div><kbd>R3</kbd>trocar câmera</div><div><kbd>TOUCHPAD / VIEW</kbd>mapa</div><div><kbd>OPTIONS / START</kbd>menu</div><div style="color:var(--mute)">Nos menus: setas navegam, ✕ confirma, ○ volta, ← → mexem nos sliders.</div></div>
     <p style="margin:10px 0 0;color:var(--mute);font-size:17px">Funciona com DualSense, DualShock 4, Xbox e a maioria dos genéricos (USB ou Bluetooth). A vibração funciona no Chrome e no Edge; no Firefox o controle anda normal, só não vibra.</p></div>
+    <div class="row" style="justify-content:flex-end;margin-top:6px"><span id="cfgResetMsg" style="color:var(--mute);font-size:17px;margin-right:auto"></span><button class="btn" type="button" id="cfgReset">RESTAURAR PADRÕES</button></div>
   </div>
 </div>
 <div id="tune" hidden role="dialog" aria-modal="true" aria-labelledby="tuneT">
@@ -1810,8 +1811,11 @@ const carLightMat=new THREE.MeshBasicMaterial({vertexColors:true});
 const wheelMat=new THREE.MeshStandardMaterial({color:0x151515,roughness:.8});
 const hubMat=new THREE.MeshStandardMaterial({color:0x9a9a9a,roughness:.4,metalness:.5});
 const wheelGeo=new THREE.CylinderGeometry(1,1,.32,14);wheelGeo.rotateX(Math.PI/2);
+// rodas: a metade de cima é descartada no shader (altura do pixel acima do centro da roda), assim não atravessa a lataria nem girando
+for(const m of [wheelMat,hubMat])m.onBeforeCompile=sh=>{sh.vertexShader='varying float vWh;\n'+sh.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\n vWh=(modelMatrix*vec4(transformed,1.)).y-(modelMatrix*vec4(0.,0.,0.,1.)).y;');
+ sh.fragmentShader='varying float vWh;\n'+sh.fragmentShader.replace('void main() {','void main() {\n if(vWh>0.015)discard;')};
 const hubGeo=new THREE.CylinderGeometry(.55,.55,.34,8);hubGeo.rotateX(Math.PI/2);
-const WHEEL_NI=new THREE.CylinderGeometry(1,1,.32,16).toNonIndexed();WHEEL_NI.rotateX(Math.PI/2);
+const WHEEL_NI=new THREE.CylinderGeometry(1,1,.32,16,1,false,-Math.PI/2,Math.PI).toNonIndexed();WHEEL_NI.rotateX(Math.PI/2); // carros distantes: só a metade de baixo da roda
 const vehicles=[];let vid=0;
 const LANES=[1.9,5.6];
 function carParts(type,colHex,st,body,li,cargoHex,riderMB){
@@ -2780,6 +2784,9 @@ $('#pad_vib').addEventListener('change',()=>rumble(.6,.6,200));
 $('#pad_sens').addEventListener('input',e=>{PAD.sens=e.target.value/100;$('#pad_sens_o').textContent=e.target.value+'%';saveCfg()});
 $('#pad_dz').addEventListener('input',e=>{PAD.dz=e.target.value/100;$('#pad_dz_o').textContent=e.target.value+'%';saveCfg()});
 $('#pad_inv').addEventListener('change',e=>{PAD.inv=e.target.checked;saveCfg()});
+const CFG_DEF={vol:{master:.85,music:.8,sfx:.85},shadows:true,bloom:true,refl:true,sound:true,traffic:20,peds:75,pad:{vib:1,sens:1,dz:.15,inv:false}};
+{let armT=0;$('#cfgReset').addEventListener('click',()=>{const b=$('#cfgReset');if(performance.now()-armT>3000){armT=performance.now();b.textContent='CLIQUE DE NOVO PARA CONFIRMAR';$('#cfgResetMsg').textContent='Volta som, gráficos, mundo e controle ao padrão.';setTimeout(()=>{if(performance.now()-armT>=2900){b.textContent='RESTAURAR PADRÕES';$('#cfgResetMsg').textContent=''}},3100);return}
+  armT=0;applyCfgObj(JSON.parse(JSON.stringify(CFG_DEF)));saveCfg();applyVolumes();try{applyShadows()}catch(e){}cfgUI();b.textContent='RESTAURAR PADRÕES';$('#cfgResetMsg').textContent='Configurações restauradas.';setTimeout(()=>$('#cfgResetMsg').textContent='',2500)})}
 $('#padTest').addEventListener('click',()=>{if(!PAD.on){toast('NENHUM CONTROLE<br><small style="font-size:11px;color:#fff">conecte e aperte um botão</small>');return}PAD.until=0;rumble(1,.2,350);setTimeout(()=>{PAD.until=0;rumble(.1,1,350)},450)});
 $('#optRain').addEventListener('change',e=>{S.rain=e.target.checked});
 $('#optStorm').addEventListener('change',e=>{S.storm=e.target.checked;WX.stormNext=null;if(S.storm){if(!WX.stormCell&&WX.stormEta==null)WX.stormReq=true}else{WX.stormReq=false;if(WX.stormEta!=null){WX.stormEta=null;if(played)wxToast('PREVISÃO DO TEMPO','tempestade cancelada · o tempo vai abrir')}const sc=WX.stormCell;if(sc){if(sc.s<.05&&!sc.fading){sc.dead=true;WX.pre=1}else{sc.life=Math.min(sc.life,sc.age);sc.fading=true;sc.age=Math.max(sc.age,sc.life)}}}});

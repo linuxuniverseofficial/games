@@ -469,3 +469,5 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 - **Reflexo da chuva em cima do rio**: a máscara das áreas molhadas era aplicada de cabeça para baixo; agora o molhado fica só em ruas, calçadas e pontes.
 - **Notificações empilhadas**: cada aviso tem seu próprio tempo e eles se encaixam um embaixo do outro (até 4), com a barra de missão em cima; nada mais se sobrepõe.
 - **Rádio**: o nome da música aparece ao entrar no veículo ou ao trocar de música/estação e some depois de 5 s.
+- **Rodas**: a metade de cima de todas as rodas fica oculta (cortada no shader pela altura do centro da roda, então continua certo com a roda girando, esterçando e com o carro inclinado). Elas não atravessam mais a lataria arredondada; nos carros distantes a roda já é só meia roda.
+- **CONFIG → RESTAURAR PADRÕES** (no fim do painel): volta volumes (85/80/85%), som, sombras, bloom, reflexos, trânsito 20%, pedestres 75% e controle (vibração 100%, sensibilidade 100%, zona morta 15%, sem inverter) ao padrão. Pede um segundo clique para confirmar.
