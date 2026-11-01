@@ -159,7 +159,7 @@ Cada um ocupa um quarteirão inteiro e aparece com o nome no mapa grande:
 
 ### Oficina mecânica (tuning)
 - Uma por cidade, marcada no mapa com um **quadrado magenta** ("OFICINA MECÂNICA" na legenda). Garagem com letreiro neon magenta, pneus e ferramentas.
-- Entre com o carro e pare no centro: abre a oficina, com **paleta de cores** e **seletor de cor livre** para pintar o carro, e **instalação de nitro** (Shift acelerando; chamas azuis no escapamento). Por enquanto os serviços são grátis.
+- Entre com o carro e pare no centro: abre a oficina, com **paleta de cores** e **seletor de cor livre** para pintar o carro, **instalação de nitro** (Shift acelerando; chamas azuis no escapamento) e **CONSERTAR**, que devolve a lataria a 100%. Por enquanto os serviços são grátis.
 - Cor e nitro ficam salvos junto com o carro.
 
 ### Litoral
@@ -329,7 +329,8 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
   - **vida**, armas e munição de cada uma;
   - itens já coletados (não reaparecem).
 - No menu, **CARREGAR JOGO SALVO** recria a mesma cidade e coloca você onde parou.
-- **Garagem da casa segura:** ao lado da porta há uma **vaga pintada de amarelo**. Estacione nela e saia do carro: ele fica **guardado** (com cor e nitro) e reaparece ali sempre, inclusive depois de carregar o jogo. Para trocar, tire o carro de lá e guarde outro.
+- **Garagem da casa segura:** são **2 vagas amarelas cobertas dentro do terreno** — ao lado da casa quando o lote é largo, ou num terreno vizinho reservado só para a garagem. Nada fica na calçada ou na rua. Estacione numa vaga e saia do carro: ele fica **guardado e consertado** (com cor e nitro) e reaparece ali sempre, inclusive depois de carregar o jogo. Cabem carros, vans, picapes e motos (até ~5,6 m); **ônibus e caminhão não cabem** (aparece o aviso). Voltar com o carro guardado batido e deixá-lo na vaga também conserta.
+- **Moto:** o boneco genérico só aparece quando um NPC pilota; com você, o seu personagem vai sentado nela.
 
 ---
 

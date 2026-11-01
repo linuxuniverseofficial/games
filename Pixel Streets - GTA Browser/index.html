@@ -214,7 +214,7 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
     <div class="row"><h2 id="tuneT" style="margin:0;font-family:var(--f-disp);font-size:18px;letter-spacing:.16em;color:#ff4ad8">OFICINA MECÂNICA</h2><button class="btn" type="button" id="tuneClose" style="margin-left:auto">PRONTO [ESC]</button></div>
     <div class="msec"><h2>PINTURA</h2><div id="tuneSw" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:8px"></div>
       <div class="row" style="margin-top:12px"><label for="tuneCol" style="font-size:19px">Cor personalizada:</label><input id="tuneCol" type="color" value="#d62828" style="width:64px;height:40px;border:2px solid var(--line);background:#000;padding:2px"></div></div>
-    <div class="msec"><h2>DESEMPENHO</h2><div class="row"><button class="btn" type="button" id="tuneNitro">INSTALAR NITRO</button><span id="tuneNitroInfo" style="color:var(--mute);font-size:18px">Segure SHIFT acelerando para usar.</span></div></div>
+    <div class="msec"><h2>DESEMPENHO</h2><div class="row"><button class="btn primary" type="button" id="tuneRepair">CONSERTAR</button><button class="btn" type="button" id="tuneNitro">INSTALAR NITRO</button><span id="tuneNitroInfo" style="color:var(--mute);font-size:18px">Segure SHIFT acelerando para usar.</span></div></div>
     <p style="margin:0;color:var(--mute);font-size:17px">Serviços grátis por enquanto (o sistema de créditos ainda está começando).</p>
   </div>
 </div>
@@ -463,7 +463,7 @@ function generateCity(){
  const st=STYLES[S.style],night=st.night,N=S.size;city.N=N;city.ext=N*P;city.st=st;const E=city.ext;
  if(city.group){scene.remove(city.group);disposeGroup(city.group)}
  city.mats.forEach(t=>t.dispose&&t.dispose());city.mats=[];
- grid=new Map();colliders=[];fallers.length=0;tumblers.length=0;city.rects=[];city.info=[];city.segOff=new Set();city.chunks=new Map();city.picked=new Set();city.taken=new Set();city.ring=[];city.poll=null;city.stunts=new Set();city.piers=[];city.ramps=[];city.gaps=[];city.wild=[];city.hosp=null;city.doors=new Map();city.core=null;city.ind=null;city.lms=[];city.chimneys=[];city.coastSpan=null;city.brokenTL=new Set();city.broken=new Set();
+ grid=new Map();colliders=[];fallers.length=0;tumblers.length=0;city.rects=[];city.info=[];city.segOff=new Set();city.chunks=new Map();city.picked=new Set();city.taken=new Set();city.ring=[];city.poll=null;city.safeFail=false;city.garSlots=null;city.stunts=new Set();city.piers=[];city.ramps=[];city.gaps=[];city.wild=[];city.hosp=null;city.doors=new Map();city.core=null;city.ind=null;city.lms=[];city.chimneys=[];city.coastSpan=null;city.brokenTL=new Set();city.broken=new Set();
  /* --- rivers: run parallel to the beach, meander in steps (GTA 1 style) and split the city into islands linked by bridges --- */
  city.coast=Math.floor(mulberry32((S.seed^0x1b873593)>>>0)()*4);
  {const rv=mulberry32((S.seed^0x5f356495)>>>0),cs=city.coast,flowX=cs<2;city.flowX=flowX;city.riv=new Set();city.bridges=[];city.water=[];city.mouths=[[],[],[],[]];
@@ -778,12 +778,21 @@ function buildChunk(ci,cj){const key=ci+','+cj;if(city.chunks.has(key))return;
   const A=[x0,y,z0],B=[x1,y,z0],C=[x1,y,z1],Dd=[x0,y,z1];
   if(x1-x0>=z1-z0){const r0=[x0,y+rh,cz],r1=[x1,y+rh,cz];roofs2.qa(A,B,r1,r0,rc,ref);roofs2.qa(Dd,C,r1,r0,rc2,ref);roofs2.qa(A,Dd,r0,r0,gc,ref);roofs2.qa(B,C,r1,r1,gc,ref)}
   else{const r0=[cx,y+rh,z0],r1=[cx,y+rh,z1];roofs2.qa(A,Dd,r1,r0,rc,ref);roofs2.qa(B,C,r1,r0,rc2,ref);roofs2.qa(A,B,r0,r0,gc,ref);roofs2.qa(Dd,C,r1,r1,gc,ref)}};
+ const garBuild=(x0,z0,x1,z1,face,gar)=>{const gp=COL(night?'#4a4458':'#b8b2a6'),yl=COL('#ffd21a'),dk=COL(night?'#3a3448':'#6a6660'),n0=face==='s'?[0,1]:face==='n'?[0,-1]:face==='e'?[1,0]:[-1,0],ns0=face==='n'||face==='s';
+   const fr=face==='s'?z1:face==='n'?z0:face==='e'?x1:x0,dep=7.2,G=(u0,u1,v0,v1,y0,y1,col,mb)=>{const a=ns0?[u0,fr-n0[1]*v0]:[fr-n0[0]*v0,u0],b=ns0?[u1,fr-n0[1]*v1]:[fr-n0[0]*v1,u1];(mb||det).box(Math.min(a[0],b[0]),y0,Math.min(a[1],b[1]),Math.max(a[0],b[0]),y1,Math.max(a[1],b[1]),col);return[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[0],b[0]),Math.max(a[1],b[1])]};
+   G(gar[0],gar[1],0,dep,.2,.26,gp,side);const mid=(gar[0]+gar[1])/2;for(const u of [gar[0]+.1,mid-.06,gar[1]-.16])G(u,u+.12,.3,dep-.3,.26,.28,yl,marks);G(gar[0]+.1,gar[1]-.04,dep-.42,dep-.3,.26,.28,yl,marks);
+   const wl=G(gar[0],gar[1],dep,dep+.3,.2,2.6,dk);addCol(wl[0],wl[1],wl[2],wl[3],'bld');G(gar[0]-.1,gar[1]+.1,1.2,dep+.3,2.6,2.75,dk);for(const u of [gar[0]+.1,gar[1]-.3])G(u,u+.2,1.2,1.4,.26,2.6,dk);
+   const sl=[];for(const u of [(gar[0]+mid)/2,(mid+gar[1])/2]){const p=ns0?[u,fr-n0[1]*3.6]:[fr-n0[0]*3.6,u];sl.push({x:p[0],z:p[1],a:Math.atan2(-n0[1],-n0[0])})}return sl};
+ const garLotB=(x0,z0,x1,z1,face)=>{side.box(x0+.15,0.2,z0+.15,x1-.15,0.24,z1-.15,cGrass.clone().multiplyScalar(rr(.85,1.1)),{});const ns0=face==='n'||face==='s',c=ns0?(x0+x1)/2:(z0+z1)/2;
+  const sl=garBuild(x0,z0,x1,z1,face,[c-4.1,c+4.1]);city.garSlots=sl;if(city.safe)applySafeSlots(sl)};
  const house=(x0,z0,x1,z1,face,safe)=>{
   side.box(x0+.15,0.2,z0+.15,x1-.15,0.24,z1-.15,cGrass.clone().multiplyScalar(rr(.85,1.1)),{});
   if(!face){if(R()<.7)tree((x0+x1)/2+rr(-2,2),(z0+z1)/2+rr(-2,2),.24,rr(.9,1.3));return}
-  const fs=rr(2.5,4.5),ss=rr(1.2,2.2),bs=rr(1.5,3);let hx0=x0+ss,hz0=z0+ss,hx1=x1-ss,hz1=z1-ss;
+  const fs=rr(2.5,4.5),ss=safe?.5:rr(1.2,2.2),bs=rr(1.5,3);let hx0=x0+ss,hz0=z0+ss,hx1=x1-ss,hz1=z1-ss;
   if(face==='s'){hz1=z1-fs;hz0=z0+bs}else if(face==='n'){hz0=z0+fs;hz1=z1-bs}else if(face==='e'){hx1=x1-fs;hx0=x0+bs}else{hx0=x0+fs;hx1=x1-bs}
+  let gar=null;if(safe){const ns0=face==='n'||face==='s';if((ns0?hx1-hx0:hz1-hz0)>=12.9){if(ns0){hx1-=7.9;gar=[hx1+.5,x1-.25]}else{hz1-=7.9;gar=[hz1+.5,z1-.25]}}}
   if(hx1-hx0<5||hz1-hz0<5)return;
+  if(gar)SAFE.slotsNext=garBuild(x0,z0,x1,z1,face,gar);
   const wc=COL(pick(HOUSE_WALLS)).multiplyScalar(rr(.92,1.04)),rc=COL(pick(HOUSE_ROOFS)),h=rr(2.9,3.5);
   det.box(hx0,.24,hz0,hx1,h,hz1,wc);det.box(hx0-.06,.24,hz0-.06,hx1+.06,.55,hz1+.06,wc.clone().multiplyScalar(.72));addCol(hx0,hz0,hx1,hz1,'bld');
   const rh=rr(1.2,2.1);roof(hx0-.4,hz0-.4,hx1+.4,hz1+.4,h,rh,rc,wc);
@@ -796,8 +805,8 @@ function buildChunk(ci,cj){const key=ci+','+cj;if(city.chunks.has(key))return;
   fbox(hx0,hz0,hx1,hz1,face,dU-.5,dU+.5,.24,2.2,0,.06,det,COL(pick(['#5a3a24','#2a3a5a','#7a2a2a','#2a4a2a'])));{const dp=face==='n'?[dU,hz0-.3]:face==='s'?[dU,hz1+.3]:face==='w'?[hx0-.3,dU]:[hx1+.3,dU];if(safe)setSafeDoor(dp[0],dp[1],face);else regDoor(dp[0],dp[1],face,dU,true)}
   for(const u of [fu+.9,fu+fl-2.1])if(Math.abs(u+.6-dU)>1.4){fbox(hx0,hz0,hx1,hz1,face,u-.08,u+1.28,1.0,2.12,0,.04,det,COL('#f2f2ee'));fbox(hx0,hz0,hx1,hz1,face,u,u+1.2,1.08,2.04,0,.07,R()<.6?hwin:det,COL('#22303c'))}
   if(face==='s')side.box(dU-.55,.2,hz1,dU+.55,.27,z1,cSide,{});else if(face==='n')side.box(dU-.55,.2,z0,dU+.55,.27,hz0,cSide,{});else if(face==='e')side.box(hx1,.2,dU-.55,x1,.27,dU+.55,cSide,{});else side.box(x0,.2,dU-.55,hx0,.27,dU+.55,cSide,{});
-  if(R()<.65){const fc=COL(pick(['#f4f4f0','#9a7a5a','#3a3a3a','#4a7a3a'])),fh=R()<.5?.9:.6;
-   if(ns){const z=face==='s'?z1-.3:z0+.1;det.box(x0+.1,.24,z,dU-1,fh,z+.2,fc);det.box(dU+1,.24,z,x1-.1,fh,z+.2,fc)}
+  if(R()<.65){const fc=COL(pick(['#f4f4f0','#9a7a5a','#3a3a3a','#4a7a3a'])),fh=R()<.5?.9:.6;if(gar){}
+   else if(ns){const z=face==='s'?z1-.3:z0+.1;det.box(x0+.1,.24,z,dU-1,fh,z+.2,fc);det.box(dU+1,.24,z,x1-.1,fh,z+.2,fc)}
    else{const x=face==='e'?x1-.3:x0+.1;det.box(x,.24,z0+.1,x+.2,fh,dU-1,fc);det.box(x,.24,dU+1,x+.2,fh,z1-.1,fc)}}
   {const hr=mulberry32(((Math.round(x0*7)*73856093)^(Math.round(z0*7)*19349663)^S.seed)>>>0);
    if(hr()<.32){// clothesline in the back yard
@@ -996,11 +1005,18 @@ function buildChunk(ci,cj){const key=ci+','+cj;if(city.chunks.has(key))return;
     if(w>=d){const s=x0+w*rr(.36,.64);if(al){alley(s-1.8,z0,s+1.8,z1);split(x0,z0,s-1.8,z1,dp+1);split(s+1.8,z0,x1,z1,dp+1)}else{split(x0,z0,s,z1,dp+1);split(s,z0,x1,z1,dp+1)}}
     else{const s=z0+d*rr(.36,.64);if(al){alley(x0,s-1.8,x1,s+1.8);split(x0,z0,x1,s-1.8,dp+1);split(x0,s+1.8,x1,z1,dp+1)}else{split(x0,z0,x1,s,dp+1);split(x0,s,x1,z1,dp+1)}}};
    split(ix0,iz0,ix1,iz1,0);curI=[ix0,iz0,ix1,iz1];
+   const faceOfLot=(x0,z0,x1,z1)=>{let face=z1>iz1-1?'s':z0<iz0+1?'n':x0<ix0+1?'w':x1>ix1-1?'e':null;
+    if(face){const mx=(x0+x1)/2,mz=(z0+z1)/2,oo=SW+7.4;if(!roadAt(face==='e'?x1+oo:face==='w'?x0-oo:mx,face==='s'?z1+oo:face==='n'?z0-oo:mz))face=null}return face};
+   // the safe house takes the widest street-facing lot of its block, so there is room for the side garage
+   let safeLot=null;if(info.safe){let bw=-1;for(const L of lots){const f=faceOfLot(...L);if(!f)continue;const w=(f==='n'||f==='s')?L[2]-L[0]:L[3]-L[1],dp=(f==='n'||f==='s')?L[3]-L[1]:L[2]-L[0];if(dp<11)continue;if(w>bw){bw=w;safeLot=L}}}
+   // narrow lot (or apartment block): reserve a neighbouring street-facing lot as a 2-spot garage so cars never stay on the sidewalk
+   let garLot=null;if(info.safe){const sw=safeLot?((faceOfLot(...safeLot)==='n'||faceOfLot(...safeLot)==='s')?safeLot[2]-safeLot[0]:safeLot[3]-safeLot[1]):0;
+    if(!houses||sw<13.9){let bd=1e9;const sc=safeLot?[(safeLot[0]+safeLot[2])/2,(safeLot[1]+safeLot[3])/2]:[(ix0+ix1)/2,(iz0+iz1)/2];for(const L of lots){if(L===safeLot)continue;const f=faceOfLot(...L);if(!f)continue;const ns=f==='n'||f==='s',w=ns?L[2]-L[0]:L[3]-L[1],dp=ns?L[3]-L[1]:L[2]-L[0];if(w<8.6||dp<8)continue;const dd=Math.hypot((L[0]+L[2])/2-sc[0],(L[1]+L[3])/2-sc[1]);if(dd<bd){bd=dd;garLot=L}}}}
    for(const[x0,z0,x1,z1] of lots){
-    let face=z1>iz1-1?'s':z0<iz0+1?'n':x0<ix0+1?'w':x1>ix1-1?'e':null;
-    if(face){const mx=(x0+x1)/2,mz=(z0+z1)/2,oo=SW+7.4;if(!roadAt(face==='e'?x1+oo:face==='w'?x0-oo:mx,face==='s'?z1+oo:face==='n'?z0-oo:mz))face=null}
-    const lk=x0.toFixed(1)+','+z0.toFixed(1),sOK=info.safe&&face&&(!city.safe||city.safeLot===lk),had=city.safe;
-    if(houses){if(sOK){house(x0,z0,x1,z1,face,true);if(city.safe&&!had)city.safeLot=lk;if(city.safe)continue}house(x0,z0,x1,z1,face);continue}
+    const face=faceOfLot(x0,z0,x1,z1);
+    const lk=x0.toFixed(1)+','+z0.toFixed(1),sOK=info.safe&&face&&(city.safe?city.safeLot===lk:(!safeLot||city.safeFail||(safeLot[0]===x0&&safeLot[1]===z0))),had=city.safe;
+    if(garLot&&garLot[0]===x0&&garLot[1]===z0&&(!city.safe||city.safeLot!==lk)){garLotB(x0,z0,x1,z1,face);continue}
+    if(houses){if(sOK){house(x0,z0,x1,z1,face,true);if(city.safe&&!had)city.safeLot=lk;if(city.safe)continue;city.safeFail=true}house(x0,z0,x1,z1,face);continue}
     if(R()<.08){if(!night)tree((x0+x1)/2,(z0+z1)/2,0.2,1.1);continue}
     if(face&&info.tune&&(!city.tuneSpot||city.tuneLot===x0.toFixed(1)+','+z0.toFixed(1))){const fl=(face==='n'||face==='s')?x1-x0:z1-z0,fd=(face==='n'||face==='s')?z1-z0:x1-x0;if(fl>10.5&&fd>11.5){garage(x0,z0,x1,z1,face,ri,true);city.tuneLot=x0.toFixed(1)+','+z0.toFixed(1);continue}}
     if(face&&info.garage&&!garaged){const fl=(face==='n'||face==='s')?x1-x0:z1-z0,fd=(face==='n'||face==='s')?z1-z0:x1-x0;if(fl>8&&fd>9.5){garage(x0,z0,x1,z1,face,ri);garaged++;continue}}
@@ -1907,7 +1923,7 @@ function syncCar(c,dt){
  if(!c.t.boat)c.roll+=((c.type==='moto'?clamp(lat*.04,-.6,.6):clamp(-lat*.009,-.07,.07))-c.roll)*Math.min(1,dt*6);if(!c.t.boat)c.pitch+=((c.airY>0?clamp((c.airV||0)/Math.max(8,Math.abs(c.fwd))*.6,-.35,.35):c.rampY>0?.28:clamp(lng*.006,-.05,.05))-c.pitch)*Math.min(1,dt*6);
  c.spin-=c.fwd*dt/c.t.wr;
  if(!c.g)return;
- if(c.rider)c.rider.visible=c===PL.car||!!c.ai||c.mode==='rail'||c.chase;
+ if(c.rider)c.rider.visible=c!==PL.car&&(!!c.ai||c.mode==='rail'||c.chase);
  c.g.position.set(c.x,c.gy+(c.hopY||0)+(c.airY||0)+(c.rampY||0),c.z);c.g.rotation.y=-c.a;c.ch.rotation.set(c.roll,0,c.pitch);
  for(const w of c.wheels){w.piv.rotation.y=w.front?-c.delta:0;w.w.rotation.z=c.spin}
 }
@@ -2142,7 +2158,7 @@ function enterExit(){
   for(const side of [-1,1,0]){const off=side===0?-(c.t.L/2+1):0;const lzv=side*(c.t.W/2+.8);
    const x=c.x+(off*ca)-lzv*sa,z=c.z+(off*sa)+lzv*ca;const o={x,z};circleVsWorld(o,.4);
    if(Math.hypot(o.x-x,o.z-z)<.05||side===0){PL.x=o.x;PL.z=o.z;break}}
-  c.thr=0;c.hand=true;c.steerT=0;PL.lastCar=c;PL.car=null;PL.sp.visible=true;PL.sh.visible=true;PL.vx=c.vx*.4;PL.vz=c.vz*.4;
+  c.thr=0;c.hand=true;c.steerT=0;PL.lastCar=c;PL.car=null;PL.rot=0;PL.sp.visible=true;PL.sh.visible=true;PL.vx=c.vx*.4;PL.vz=c.vz*.4;
   PL.yaw=Math.atan2(-Math.cos(c.a),-Math.sin(c.a));PL.face=[Math.cos(c.a),Math.sin(c.a)];
   $('#speed').hidden=true;$('#carbar').hidden=true;return}
  let best=null,bd=5.5;for(const c of carsNear(PL.x,PL.z,9)){if(!c.alive)continue;const d=Math.hypot(c.x-PL.x,c.z-PL.z)-c.t.W/2;if(d<bd){bd=d;best=c}}
@@ -2161,7 +2177,9 @@ function updatePlayer(dt){
  if(PL.dead){PL.deadT-=dt;if(PL.deadT<=0)respawnPlayer();}
  if(PL.car){const c=PL.car;const up=keys.KeyW||keys.ArrowUp,dn=keys.KeyS||keys.ArrowDown,lf=keys.KeyA||keys.ArrowLeft,rt=keys.KeyD||keys.ArrowRight;
   c.dirt=isRural(c.x,c.z)?1:0;if(c.dirt&&Math.hypot(c.vx,c.vz)>5&&Math.random()<dt*28){const ca=Math.cos(c.a),sa=Math.sin(c.a),sd=Math.random()<.5?1:-1;emit(c.x-ca*c.t.L*.5-sa*sd*c.t.W*.4,.4,c.z-sa*c.t.L*.5+ca*sd*c.t.W*.4,(Math.random()-.5)*1.5,.6+Math.random(),(Math.random()-.5)*1.5,1.3,.9,3.2,STYLES[S.style].night?0x5a4a52:0xb89a70,false,.45)}
-  c.nitro=!!((c.special||c.hasNitro)&&up&&(keys.ShiftLeft||keys.ShiftRight));c.thr=(up?1:0)-(dn?1:0);c.steerT=(rt?1:0)-(lf?1:0);c.hand=!!keys.Space;c.sleep=false;PL.x=c.x;PL.z=c.z;return}
+  c.nitro=!!((c.special||c.hasNitro)&&up&&(keys.ShiftLeft||keys.ShiftRight));c.thr=(up?1:0)-(dn?1:0);c.steerT=(rt?1:0)-(lf?1:0);c.hand=!!keys.Space;c.sleep=false;PL.x=c.x;PL.z=c.z;
+  if(c.type==='moto'){const vis=camMode!=='fps'||VIEW.tp;PL.sp.visible=vis;PL.sh.visible=false;PL.gy=c.gy+(c.airY||0)+(c.rampY||0)+(camMode==='top'&&!VIEW.orbit?.2:.55);PL.jy=0;PL.rot=-(c.roll||0)*.9;const ca=Math.cos(c.a),sa=Math.sin(c.a);PL.face=[ca,sa];setFrame(PL.tex,pickDir(ca,sa,c.x-ca*.15,c.z-sa*.15),0);placeSprite({...PL,x:c.x-ca*.15,z:c.z-sa*.15,sh:PL.sh})}
+  return}
  if(PL.down>0||PL.dead){PL.down-=dt;PL.x+=PL.vx*dt;PL.z+=PL.vz*dt;PL.vx*=Math.exp(-dt*3);PL.vz*=Math.exp(-dt*3);circleVsWorld(PL,.4);if(PL.down<=0&&!PL.dead)PL.rot=0}
  else{
   let mx=0,mz=0;
@@ -2452,7 +2470,7 @@ function closeMenu(){if(played&&city.st&&city.st!==STYLES[S.style]){$('#play').c
 $('#menuBtn').addEventListener('click',openMenu);$('#cmdBtn').addEventListener('click',openCmds);$('#cmdBtnMenu').addEventListener('click',openCmds);$('#cmdsClose').addEventListener('click',closeCmds);$('#cmds').addEventListener('click',e=>{if(e.target.id==='cmds')closeCmds()});
 $('#resume').addEventListener('click',closeMenu);
 $('#play').addEventListener('click',()=>startGame(null));
-function startGame(save){if(!save){SAFE.stored=null;SAFE.car=null}S.view='fps';VIEW.tp=true;VIEW.orbit=false;CELLS.length=0;WX.f=0;WX.wet=false;WX.lastOpt=undefined;rebuildRadio();BOOM.rng=null;initAudio();$('#loading').hidden=false;
+function startGame(save){if(!save){SAFE.stored=[null,null]}SAFE.cars=[null,null];S.view='fps';VIEW.tp=true;VIEW.orbit=false;CELLS.length=0;WX.f=0;WX.wet=false;WX.lastOpt=undefined;rebuildRadio();BOOM.rng=null;initAudio();$('#loading').hidden=false;
  setTimeout(()=>{try{generateCity();applyShadows()}catch(err){console.error(err)}$('#loading').hidden=true;running=true;played=true;setView(S.view,true);$('#hud').hidden=false;closeMenu();
   if(save){try{applySave(save)}catch(err){console.error(err)}}else toast(STYLES[S.style].label+' · SEED '+S.seed+'<br><small style="font-size:11px;color:#fff">F perto de um carro para dirigir · seta amarela no mapa: casa segura</small>');saveGame(true)},30)}
 syncSave();
@@ -2614,9 +2632,11 @@ function misUpdate(dt){
 /* ================= TUNING SHOP ================= */
 const TUNE={open:false,lock:false,car:null};const TUNE_COLS=['#d62828','#ff6a1a','#f2c21a','#7ad62a','#1e9a4a','#1ac8c8','#2a6ad6','#1a2a6a','#8a3ad6','#ff4fa3','#f4f4f0','#9aa0a8','#4a4e56','#141418','#8a5a2a','#c8a86a'];
 {const sw=$('#tuneSw');for(const c of TUNE_COLS){const b=document.createElement('button');b.type='button';b.className='sw';b.style.background=c;b.setAttribute('aria-label','cor '+c);b.addEventListener('click',()=>tunePaint(c));sw.appendChild(b)}
- $('#tuneCol').addEventListener('input',e=>tunePaint(e.target.value));$('#tuneClose').addEventListener('click',()=>closeTune());$('#tuneNitro').addEventListener('click',()=>{const c=TUNE.car;if(!c)return;c.hasNitro=true;syncTune();clang(.3);toast('NITRO INSTALADO<br><small style="font-size:11px;color:#fff">segure SHIFT acelerando</small>')})}
+ $('#tuneCol').addEventListener('input',e=>tunePaint(e.target.value));$('#tuneClose').addEventListener('click',()=>closeTune());$('#tuneRepair').addEventListener('click',()=>{const c=TUNE.car;if(!c||!c.alive)return;repairCar(c);syncTune();clang(.3);toast('CARRO CONSERTADO')});
+ $('#tuneNitro').addEventListener('click',()=>{const c=TUNE.car;if(!c)return;c.hasNitro=true;syncTune();clang(.3);toast('NITRO INSTALADO<br><small style="font-size:11px;color:#fff">segure SHIFT acelerando</small>')})}
+function repairCar(c){c.hp=100;c.ovT=0;if(c.g){dropCarMesh(c);buildCarMesh(c)}}
 function tunePaint(hex){const c=TUNE.car;if(!c)return;c.color=hex;c.icol=COL(hex);if(c.g){dropCarMesh(c);buildCarMesh(c)}$('#tuneCol').value=hex.length===7?hex:'#d62828'}
-function syncTune(){const c=TUNE.car;$('#tuneNitro').disabled=!c||!!(c.hasNitro||c.special);$('#tuneNitro').textContent=c&&(c.hasNitro||c.special)?'NITRO INSTALADO':'INSTALAR NITRO'}
+function syncTune(){const c=TUNE.car;const hp=c?Math.max(0,Math.round(c.hp)):0;$('#tuneRepair').disabled=!c||hp>=100;$('#tuneRepair').textContent=hp>=100?'LATARIA 100%':'CONSERTAR ('+hp+'% → 100%)';$('#tuneNitro').disabled=!c||!!(c.hasNitro||c.special);$('#tuneNitro').textContent=c&&(c.hasNitro||c.special)?'NITRO INSTALADO':'INSTALAR NITRO'}
 function openTune(c){TUNE.open=true;TUNE.car=c;TUNE.lock=true;c.vx=c.vz=0;c.w=0;c.thr=0;for(const k in keys)keys[k]=false;if(document.pointerLockElement)document.exitPointerLock();$('#tune').hidden=false;syncTune();$('#tuneClose').focus()}
 function closeTune(){TUNE.open=false;$('#tune').hidden=true;toast('BOA VIAGEM!')}
 function updateTune(){const sp=city.tuneSpot,c=PL.car;if(!sp||!c||c.t.boat){if(!c)TUNE.lock=false;return}const d=Math.hypot(c.x-sp.x,c.z-sp.z);if(d>7)TUNE.lock=false;if(!TUNE.lock&&d<3.2&&Math.abs(c.fwd)<2&&c.alive)openTune(c)}
@@ -2625,12 +2645,13 @@ function updateTune(){const sp=city.tuneSpot,c=PL.car;if(!sp||!c||c.t.boat){if(!
 const SAFE={arrowOut:null,arrowIn:null,grp:null,IN:null,lock:0,tvT:0,saveT:20};
 function makeArrow(){const g=new THREE.Group();const m=new THREE.MeshBasicMaterial({color:0xffd21a});const c=new THREE.Mesh(new THREE.ConeGeometry(.42,.9,4),m);c.rotation.x=Math.PI;const b=new THREE.Mesh(new THREE.BoxGeometry(.32,.6,.32),m);b.position.y=.7;g.add(c,b);
  const ring=new THREE.Mesh(new THREE.PlaneGeometry(2.4,2.4),new THREE.MeshBasicMaterial({map:glowTex,color:0xffc81a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.8}));ring.rotation.x=-Math.PI/2;ring.position.y=-1.15;g.add(ring);g.visible=false;scene.add(g);return g}
+function applySafeSlots(sl){city.safe.slots=sl;if(!SAFE.pads)SAFE.pads=[];for(let i=0;i<2;i++){if(!SAFE.pads[i]){const mb=new MB(),y=COL('#ffd21a');mb.box(-2.9,0,-1.6,2.9,.06,-1.45,y);mb.box(-2.9,0,1.45,2.9,.06,1.6,y);mb.box(-2.9,0,-1.6,-2.75,.06,1.6,y);mb.box(2.75,0,-1.6,2.9,.06,1.6,y);
+    mb.box(-.9,0,-.7,-.6,.07,.7,y);mb.box(-.9,0,-.7,.5,.07,-.4,y);mb.box(-.9,0,-.1,.5,.07,.2,y);mb.box(.2,0,-.7,.5,.07,.2,y);SAFE.pads[i]=mb.mesh(new THREE.MeshBasicMaterial({vertexColors:true}));scene.add(SAFE.pads[i])}
+   const q=sl[i];SAFE.pads[i].visible=!!q;if(q){SAFE.pads[i].position.set(q.x,groundY(q.x,q.z)+.04,q.z);SAFE.pads[i].rotation.y=-q.a}}}
 function setSafeDoor(x,z,face){const n=face==='n'?[0,-1]:face==='s'?[0,1]:face==='e'?[1,0]:[-1,0];city.safe={x:x+n[0]*1.4,z:z+n[1]*1.4,nx:n[0],nz:n[1],door:[x,z]};
- {let g=null;for(const sd of [1,-1])for(const off of [6,5,7.5]){if(g)break;const gx=x+n[0]*off-n[1]*sd*6,gz=z+n[1]*off+n[0]*sd*6;if(!query(gx,gz,3).some(b=>!b.dead&&(b.kind==='bld'||b.kind==='rock')&&gx>b.x0-2.6&&gx<b.x1+2.6&&gz>b.z0-2.6&&gz<b.z1+2.6)&&!inWater(gx,gz))g={x:gx,z:gz}}
-  if(!g)g={x:x+n[0]*7,z:z+n[1]*7};city.safe.gx=g.x;city.safe.gz=g.z;city.safe.ga=Math.atan2(n[1],n[0]);
-  if(!SAFE.pad){const mb=new MB(),y=COL('#ffd21a');mb.box(-2.9,0,-1.6,2.9,.06,-1.45,y);mb.box(-2.9,0,1.45,2.9,.06,1.6,y);mb.box(-2.9,0,-1.6,-2.75,.06,1.6,y);mb.box(2.75,0,-1.6,2.9,.06,1.6,y);
-   mb.box(-.9,0,-.7,-.6,.07,.7,y);mb.box(-.9,0,-.7,.5,.07,-.4,y);mb.box(-.9,0,-.1,.5,.07,.2,y);mb.box(.2,0,-.7,.5,.07,.2,y);SAFE.pad=mb.mesh(new THREE.MeshBasicMaterial({vertexColors:true}));scene.add(SAFE.pad)}
-  SAFE.pad.position.set(g.x,groundY(g.x,g.z)+.03,g.z);SAFE.pad.rotation.y=-city.safe.ga;SAFE.pad.visible=true}if(SAFE.arrowOut){SAFE.arrowOut.position.set(city.safe.x,1.5,city.safe.z)}}
+ {let sl=SAFE.slotsNext||city.garSlots;SAFE.slotsNext=null;SAFE.lastSide=!!sl;const tg=[-n[1],n[0]];
+  if(!sl){sl=[];for(const k of [5.5,11.5,-5.5,-11.5]){if(sl.length>=2)break;const gx=x+n[0]*2.4+tg[0]*k,gz=z+n[1]*2.4+tg[1]*k;if(!inWater(gx,gz)&&!query(gx,gz,3).some(b=>!b.dead&&(b.kind==='bld'||b.kind==='rock'||b.kind==='tree'||b.kind==='pole')&&gx>b.x0-2.6&&gx<b.x1+2.6&&gz>b.z0-1.2&&gz<b.z1+1.2))sl.push({x:gx,z:gz,a:Math.atan2(tg[1],tg[0])})}}
+  applySafeSlots(sl)}if(SAFE.arrowOut){SAFE.arrowOut.position.set(city.safe.x,1.5,city.safe.z)}}
 function ibox(mb,x0,y0,z0,x1,y1,z1,col){mb.quad([x0,y1,z1],[x1,y1,z1],[x1,y1,z0],[x0,y1,z0],0,1,0,[0,0,1,1],col);const c2=col.clone().multiplyScalar(.8),c3=col.clone().multiplyScalar(.66);
  mb.quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],1,0,0,[0,0,1,1],c2);mb.quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],-1,0,0,[0,0,1,1],c2);
  mb.quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],0,0,1,[0,0,1,1],c3);mb.quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],0,0,-1,[0,0,1,1],c3)}
@@ -2672,15 +2693,19 @@ function buildSafehouse(){if(SAFE.grp){scene.remove(SAFE.grp);disposeGroup(SAFE.
   const tex=new THREE.CanvasTexture(cvs);tex.magFilter=THREE.NearestFilter;const fr=new THREE.Mesh(new THREE.BoxGeometry(w+.12,h+.12,.05),new THREE.MeshBasicMaterial({color:0x2a1a10}));fr.position.set(px,py,pz);fr.rotation.y=ry;g.add(fr);
   const pic=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex}));pic.position.set(px+Math.sin(ry)*.035,py,pz+Math.cos(ry)*.035);pic.rotation.y=ry;g.add(pic)}
  for(const[x0,z0,x1,z1] of [[X-W-.5,Z-D-.5,X+W+.5,Z-D],[X-W-.5,Z+D,X+W+.5,Z+D+.5],[X-W-.5,Z-D,X-W,Z+D],[X+W,Z-D,X+W+.5,Z+D],[X-4.9,Z-1.9,X-3.3,Z+1.5],[X+2.2,Z-3.9,X+4.95,Z-1.9],[X+3.9,Z+1.2,X+4.95,Z+3.2],[X-4.95,Z+2.2,X-1,Z+3.95],[X+.9,Z-1.3,X+1.4,Z+.9]])addCol(x0,z0,x1,z1,'rock');
- SAFE.arrowIn.position.set(X,1.5,Z+D-.9);SAFE.car=null;if(SAFE.pad)SAFE.pad.visible=false;SAFE.arrowOut.visible=false;SAFE.arrowIn.visible=false;PL.inside=false;SAFE.lock=0}
+ SAFE.arrowIn.position.set(X,1.5,Z+D-.9);SAFE.cars=[null,null];SAFE.slotsNext=null;if(SAFE.pads&&!city.safe)for(const q of SAFE.pads)q.visible=false;SAFE.arrowOut.visible=false;SAFE.arrowIn.visible=false;PL.inside=false;SAFE.lock=0}
 function carRec(c){return{type:c.type,color:c.color,nitro:!!c.hasNitro,special:!!c.special}}
-function safeGarage(){const s=city.safe;if(!s||s.gx===undefined||PL.inside)return;const p=PL.car||PL,dp=Math.hypot(p.x-s.gx,p.z-s.gz);
- if(SAFE.car&&(!vehicles.includes(SAFE.car)||!SAFE.car.alive)){if(SAFE.car&&!SAFE.car.alive&&Math.hypot(SAFE.car.x-s.gx,SAFE.car.z-s.gz)<6){SAFE.stored=null;toast('O CARRO DA GARAGEM FOI DESTRUÍDO')}SAFE.car=null}
- if(SAFE.stored&&!SAFE.car&&dp<220&&VT[SAFE.stored.type]){const c=makeVehicle(SAFE.stored.type,s.gx,s.gz,s.ga,SAFE.stored.color);c.hasNitro=SAFE.stored.nitro;c.special=SAFE.stored.special;c.hand=true;c.sleep=true;SAFE.car=c}
- const lc=PL.lastCar;if(!PL.car&&lc&&lc.alive&&!lc.t.boat&&lc!==SAFE.car&&Math.hypot(lc.x-s.gx,lc.z-s.gz)<3.2&&Math.hypot(lc.vx,lc.vz)<1){
-  if(SAFE.car&&SAFE.car!==lc){toast('A GARAGEM JÁ TEM UM CARRO');return}SAFE.stored=carRec(lc);SAFE.car=lc;lc.hand=true;toast('CARRO GUARDADO NA GARAGEM<br><small style="font-size:11px;color:#fff">ele fica aqui mesmo depois de carregar o jogo</small>');saveGame(true)}
- if(SAFE.car&&PL.car===SAFE.car&&Math.hypot(SAFE.car.x-s.gx,SAFE.car.z-s.gz)>35){SAFE.stored=null;SAFE.car=null;toast('CARRO RETIRADO DA GARAGEM');saveGame(true)}
- else if(SAFE.car&&PL.car===SAFE.car)SAFE.stored=carRec(SAFE.car)}
+function safeGarage(){const s=city.safe;if(!s||!s.slots||PL.inside)return;const p=PL.car||PL;if(!Array.isArray(SAFE.stored))SAFE.stored=[SAFE.stored||null,null];if(!SAFE.cars)SAFE.cars=[null,null];if(PL.car)SAFE.msgFor=null;
+ for(let i=0;i<2;i++){const sl=s.slots[i];if(!sl)continue;let car=SAFE.cars[i];
+  if(car&&(!vehicles.includes(car)||!car.alive)){if(!car.alive&&Math.hypot(car.x-sl.x,car.z-sl.z)<6){SAFE.stored[i]=null;toast('O CARRO DA GARAGEM FOI DESTRUÍDO')}SAFE.cars[i]=car=null}
+  const st=SAFE.stored[i];if(st&&!car&&Math.hypot(p.x-sl.x,p.z-sl.z)<220&&VT[st.type]){const c=makeVehicle(st.type,sl.x,sl.z,sl.a,st.color);c.hasNitro=st.nitro;c.special=st.special;c.hand=true;c.sleep=true;SAFE.cars[i]=c}
+  car=SAFE.cars[i];if(car&&PL.car===car){if(Math.hypot(car.x-sl.x,car.z-sl.z)>35){SAFE.stored[i]=null;SAFE.cars[i]=null;toast('CARRO RETIRADO DA GARAGEM');saveGame(true)}else SAFE.stored[i]=carRec(car)}}
+ const lc=PL.lastCar;if(PL.car||!lc||!lc.alive||lc.t.boat||Math.hypot(lc.vx,lc.vz)>1||SAFE.msgFor===lc&&lc.hp>=100)return;
+ for(let i=0;i<2;i++){const sl=s.slots[i];if(!sl||Math.hypot(lc.x-sl.x,lc.z-sl.z)>3.4)continue;
+  if(SAFE.cars[i]===lc){if(lc.hp<100){repairCar(lc);toast('CARRO CONSERTADO NA GARAGEM');clang(.3)}SAFE.msgFor=lc;return}
+  SAFE.msgFor=lc;if(SAFE.cars[i]){toast('ESSA VAGA JÁ ESTÁ OCUPADA');return}if(lc.t.L>5.6){toast('ESSE VEÍCULO NÃO CABE NA GARAGEM');return}
+  const j=SAFE.cars.indexOf(lc);if(j>=0){SAFE.cars[j]=null;SAFE.stored[j]=null}
+  SAFE.stored[i]=carRec(lc);SAFE.cars[i]=lc;lc.hand=true;repairCar(lc);toast('CARRO GUARDADO E CONSERTADO<br><small style="font-size:11px;color:#fff">vaga '+(i+1)+' de 2 · fica aqui mesmo depois de carregar o jogo</small>');saveGame(true);return}}
 function enterSafe(){if(POL.wanted){toast('NÃO DÁ PRA ENTRAR PROCURADO');SAFE.lock=1.5;return}fadeFlash();const IN=SAFE.IN;PL.inside=true;PL.x=IN.x;PL.z=IN.z+1.3;PL.vx=PL.vz=0;PL.face=[0,-1];PL.yaw=0;PL.hp=Math.max(PL.hp,100);SAFE.lock=1;
  if(camMode==='fps')chasePos.set(PL.x,2.4,PL.z+3);camT.x=PL.x;camT.z=PL.z;for(const p of peds.slice())if(!p.fixed)removePed(p);saveGame(true);toast('CASA SEGURA · JOGO SALVO<br><small style="font-size:11px;color:#fff">vida recuperada · a seta amarela leva de volta à rua</small>')}
 function exitSafe(){fadeFlash();const s=city.safe;PL.inside=false;PL.x=s.x+s.nx*2.3;PL.z=s.z+s.nz*2.3;PL.vx=PL.vz=0;PL.face=[s.nx,s.nz];PL.yaw=Math.atan2(-s.nx,-s.nz);SAFE.lock=1;camT.x=PL.x;camT.z=PL.z;if(camMode==='fps')chasePos.set(PL.x-s.nx*4,2.6,PL.z-s.nz*4);streamChunks(true)}
@@ -2704,7 +2729,7 @@ function applySave(d){PL.hp=d.hp||100;PL.money=d.money||0;GUN.inv=d.gun&&d.gun.i
  if(typeof d.tod==='number'){DN.tod=d.tod;updateDayNight(0,true)}
  let x=d.x,z=d.z;const o={x,z};circleVsWorld(o,.6);if(inWater(o.x,o.z)||!isFinite(o.x)){if(city.safe){o.x=city.safe.x;o.z=city.safe.z}}PL.x=o.x;PL.z=o.z;PL.vx=PL.vz=0;camT.x=PL.x;camT.z=PL.z;
  streamChunks(true);for(const p of pickups.slice())if(city.picked.has(p.id))removePickup(p);
- SAFE.stored=d.garage||null;SAFE.car=null;if(d.car&&VT[d.car.type]){const c=makeVehicle(d.car.type,PL.x,PL.z,d.car.a||0,d.car.color);c.hasNitro=!!d.car.nitro;c.hp=Math.max(25,d.car.hp||100);c.sleep=false;c.hand=false;if(d.car.type==='super'){c.special=true;c.hasGlow=true}
+ SAFE.stored=Array.isArray(d.garage)?d.garage.slice(0,2):[d.garage||null,null];SAFE.cars=[null,null];if(d.car&&VT[d.car.type]){const c=makeVehicle(d.car.type,PL.x,PL.z,d.car.a||0,d.car.color);c.hasNitro=!!d.car.nitro;c.hp=Math.max(25,d.car.hp||100);c.sleep=false;c.hand=false;if(d.car.type==='super'){c.special=true;c.hasGlow=true}
   PL.car=c;PL.sp.visible=false;PL.sh.visible=false;$('#speed').hidden=false;$('#carbar').hidden=false;if(camMode==='fps')chasePos.set(c.x-Math.cos(c.a)*9,4,c.z-Math.sin(c.a)*9)}
  for(const p of peds.slice())if(!p.fixed)removePed(p);for(const v of vehicles.slice())if(v!==PL.car&&(v.mode==='rail'||v.ai))removeVehicle(v);buildCarHash();buildLanes();populate(true);
  for(let i=0;i<pedTarget();i++)spawnPed({x:PL.x,z:PL.z,min:0,max:200});
