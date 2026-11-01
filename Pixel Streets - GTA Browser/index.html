@@ -1360,7 +1360,7 @@ function forecastCell(c,eta){const pc=PL.car||PL,dx=c.x-pc.x,dz=c.z-pc.z,d=Math.
  sub='chuva se formando '+(where==='SOBRE VOCÊ'?'bem aqui':where.toLowerCase())+' em ~'+Math.max(5,Math.round(eta/5)*5)+' min'+(toward?' · vindo na sua direção':'');wxToast('PREVISÃO DO TEMPO',sub)}
 function stepCells(dt){if(!city.ext)return;
  if(S.rain){WX.cellT=(WX.cellT||60)-dt;if(WX.cellT<=0){WX.cellT=35+Math.random()*75;if(CELLS.length<4&&Math.random()<(WX.chance||.25)){const c=spawnCell(Math.random()<.35);c.wait=15+Math.random()*25;if(played)forecastCell(c,c.wait+20)}}}
- for(const c of CELLS){if(!c.big){c.x+=WX.wx*dt;c.z+=WX.wz*dt}if(c.wait>0){c.wait-=dt;if(!S.rain){c.wait=0;c.dead=true}continue}c.age+=dt;if(!S.rain&&!c.storm)c.life=Math.min(c.life,c.age);if(c.dead){c.s=0;continue}
+ for(const c of CELLS){if(!c.big){c.x+=WX.wx*dt;c.z+=WX.wz*dt}if(c.wait>0){c.wait-=dt;if(!S.rain){c.wait=0;c.dead=true}continue}if(c.storm&&!c.fading&&(WX.cover||0)<.9)continue;c.age+=dt;if(!S.rain&&!c.storm)c.life=Math.min(c.life,c.age);if(c.dead){c.s=0;continue}
   if(c.age<c.life)c.s=Math.min(c.max,c.s+dt/(c.storm?55:40)*c.max);
   else{if(c.storm&&!c.fading){c.fading=true;if(played)wxToast('PREVISÃO DO TEMPO','a tempestade está perdendo força'+(S.rain?' · ficam pancadas isoladas':''))}if(c.big&&!c.split&&S.rain){c.split=true;const pc=PL.car||PL;for(let k=0;k<1+(Math.random()<.5?1:0);k++){const a=Math.random()*6.283,d=120+Math.random()*350;spawnCell(false,{x:pc.x+Math.cos(a)*d,z:pc.z+Math.sin(a)*d,r:180+Math.random()*220,s:c.s})}}
    c.s-=dt/40*c.max}}
@@ -1373,16 +1373,16 @@ function updateWeather(dt){const st=STYLES[S.style];
  if(WX.stormEta!=null&&city.ext){WX.stormEta-=dt;const e=WX.stormEta;
   if(e<=30&&WX.stormMsg>30){WX.stormMsg=30;wxToast('PREVISÃO DO TEMPO: TEMPESTADE EM 30 MIN','nuvens escuras já aparecem no horizonte, a '+dirName(Math.cos(WX.stormDir),Math.sin(WX.stormDir)).toLowerCase())}
   else if(e<=10&&WX.stormMsg>10){WX.stormMsg=10;wxToast('TEMPESTADE EM 10 MIN','procure abrigo · pistas vão ficar escorregadias')}
-  if(e<=0){WX.stormEta=null;if(WX.stormDir==null)WX.stormDir=Math.random()*6.283;const E=city.ext;WX.stormCell=spawnCell(false,null,true);WX.stormCell.x=E/2;WX.stormCell.z=E/2;wxToast('O CÉU ESTÁ FECHANDO','a tempestade chegou')}
+  if(e<=0){WX.stormEta=null;WX.coverMsg=false;if(WX.stormDir==null)WX.stormDir=Math.random()*6.283;const E=city.ext;WX.stormCell=spawnCell(false,null,true);WX.stormCell.x=E/2;WX.stormCell.z=E/2;WX.cover=0;wxToast('O CÉU ESTÁ FECHANDO','a tempestade chegou · a chuva começa quando cobrir tudo')}
   if(e>0&&e<=35){WX.pre=Math.min(1,(35-e)/35)}}else WX.pre=Math.max(0,(WX.pre||0)-dt/20);
  stepCells(dt);
  {const sc=WX.stormCell,u=skyMat.uniforms.stormK.value,ub=skyMat.uniforms.stormB.value,dd=WX.stormDir||0,pr=WX.pre||0;
   // frente da tempestade: começa no horizonte do lado de onde ela vem e avança; o lado oposto fica claro.
   // ao enfraquecer, a borda de trás (céu limpando) entra pelo mesmo lado e atravessa o céu.
   let front=1.6,back=1.6,amt=0;const k=sc?clamp(sc.s/sc.max,0,1):0;
-  if(sc&&!sc.fading){front=.3-.62*k;amt=1}else if(sc&&sc.fading){front=-.32;back=-1.6+3.2*k;amt=1}
-  else if(pr>0){front=1.35-1.05*pr;amt=.35+.65*pr}
-  u.set(Math.cos(dd),Math.sin(dd),front,amt);ub.set(back,0,sc?1:0,0);WX.stormAmt=sc?k:pr*.5}
+  if(sc&&!sc.fading){WX.cover=Math.min(1,(WX.cover||0)+dt/28);front=-1.7*WX.cover;amt=1;if(WX.cover>=1&&!WX.coverMsg){WX.coverMsg=true;wxToast('TEMPESTADE','céu totalmente fechado')}}else if(sc&&sc.fading){front=-1.7;back=-1.7+3.4*k;amt=1}
+  else if(pr>0){front=1.4-1.4*pr;amt=.35+.65*pr}
+  u.set(Math.cos(dd),Math.sin(dd),front,amt);ub.set(back,0,sc?1:0,0);WX.stormAmt=sc?Math.max(k,WX.cover||0):pr*.5}
  const c0=camMode==='top'?camT:{x:camera.position.x,z:camera.position.z};
  WX.f+=((PL.inside?0:rainAt(c0.x,c0.z))-WX.f)*Math.min(1,dt*.7);const f=WX.f;
  if(played&&!menuOpen&&simT>(WX.msgT||0)){if(f>.45&&!WX.wet){WX.wet=true;WX.msgT=simT+20;toast('COMEÇOU A CHOVER AQUI')}else if(f<.12&&WX.wet){WX.wet=false;WX.msgT=simT+20;toast('A CHUVA PAROU AQUI')}}
