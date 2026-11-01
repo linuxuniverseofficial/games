@@ -378,3 +378,20 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 - Web Audio API (motor, sirene, rádio com EQ, som 3D, chuva, efeitos)
 - Canvas 2D para sprites, texturas e mapas
 - Sem dependências de backend
+
+## Controle (DualSense / DualShock / Xbox / genéricos)
+- Conecte por USB ou Bluetooth e **aperte qualquer botão** (exigência do navegador). Aparece "🎮 CONTROLE CONECTADO".
+- **R2 / L2** analógicos: acelerar e freio/ré, com a pressão dosando a força. **Analógico esquerdo**: andar (meio curso anda devagar, curso todo corre) e dirigir. **Analógico direito**: câmera.
+- **△/Y** entrar/sair · **✕/A** pular (a pé) e freio de mão · **○/B** freio de mão e voltar nos menus · **R1** atirar (a pé também R2 ou □) · **L1** nitro · **□/L3** buzina no carro · **L3** correr a pé · **← →** arma · **↑** rádio · **↓** missão · **R3** câmera · **Touchpad/View** mapa · **Options/Start** menu.
+- Menus navegáveis pelo controle: setas mudam o foco, ✕ confirma, ○ volta, ← → ajustam os sliders.
+- **Vibração** (Chrome/Edge): batidas proporcionais ao impacto, pouso de rampa, tiros (pistola, rajada da SMG, coice da bazuca), explosões pela distância, levar tiro ou atropelamento, trovão próximo (com atraso do som), tremor em terra/grama, nitro, motor da moto e barco.
+- **CONFIG → CONTROLE**: status do controle, intensidade da vibração, sensibilidade da câmera, zona morta, inverter eixo Y e botão TESTAR VIBRAÇÃO. Tudo salvo no navegador.
+- No Firefox o controle funciona mas não vibra.
+
+## Previsão do tempo e tempestade
+- A tempestade **não sai mais sozinha** (não é mais a 6ª célula). As células de chuva normais continuam aleatórias.
+- **Menu → MUNDO → TEMPESTADE**: escolha "Prevista: chega em 1h de jogo (1 min)". Aparece em azul **"PREVISÃO DO TEMPO: TEMPESTADE EM 1H"** com a direção de onde ela vem, depois avisos de 30 min e 10 min. A partir dos 35 min as nuvens escuras surgem no horizonte daquele lado e avançam até cobrir a cidade.
+- O céu vira um **degradê de duas cores**: o horizonte do lado de onde a tempestade vem fica escuro e o lado oposto continua claro, com as nuvens escondendo a transição. A frente escura avança do horizonte até cobrir uns 2/3 do céu e cai a chuva pesada com raios e trovões.
+- Ao enfraquecer, o céu começa a limpar **pelo mesmo lado** de onde ela veio e a parte escura atravessa o céu até sumir no lado oposto. Com chuva ligada, ela se quebra em pancadas isoladas. Depois a opção volta para "Sem tempestade". Funciona mesmo com a chuva comum desligada.
+- **Chuva normal**: cada célula nova agora é anunciada antes de se formar ("chuva se formando a nordeste em ~30 min · vindo na sua direção" ou "bem aqui"). A célula leva alguns minutos para aparecer.
+- Os avisos da previsão aparecem numa caixa azul no centro, um pouco abaixo dos avisos normais.
