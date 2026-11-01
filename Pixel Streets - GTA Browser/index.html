@@ -202,7 +202,7 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
         <button class="btn" type="button" id="monBtn" style="margin-right:auto">MONITOR</button>
         <button class="btn" type="button" id="loadSave" hidden>SAVE ANTIGO (NAVEGADOR)</button>
         <label class="btn" for="loadFile" style="display:inline-block">CARREGAR SAVE</label><input id="loadFile" type="file" accept=".psave,.json,.txt,application/json,text/plain" hidden>
-        <button class="btn" type="button" id="saveFile" hidden>SALVAR JOGO (ARQUIVO)</button>
+        <button class="btn" type="button" id="saveFile" hidden>SALVAR JOGO</button>
         <button class="btn" type="button" id="resume" hidden>CONTINUAR</button>
         <button class="btn primary" type="button" id="play">GERAR CIDADE E JOGAR</button>
       </div>
@@ -1811,9 +1811,11 @@ const carLightMat=new THREE.MeshBasicMaterial({vertexColors:true});
 const wheelMat=new THREE.MeshStandardMaterial({color:0x151515,roughness:.8});
 const hubMat=new THREE.MeshStandardMaterial({color:0x9a9a9a,roughness:.4,metalness:.5});
 const wheelGeo=new THREE.CylinderGeometry(1,1,.32,14);wheelGeo.rotateX(Math.PI/2);
-// rodas: a metade de cima é descartada no shader (altura do pixel acima do centro da roda), assim não atravessa a lataria nem girando
-for(const m of [wheelMat,hubMat])m.onBeforeCompile=sh=>{sh.vertexShader='varying float vWh;\n'+sh.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\n vWh=(modelMatrix*vec4(transformed,1.)).y-(modelMatrix*vec4(0.,0.,0.,1.)).y;');
- sh.fragmentShader='varying float vWh;\n'+sh.fragmentShader.replace('void main() {','void main() {\n if(vWh>0.015)discard;')};
+// rodas dos carros detalhados: a parte de cima é descartada acima da linha da LATARIA (espaço local da carroceria, que inclina com a suspensão);
+// ao acelerar/frear a carroceria sobe e a roda aparece mais, como numa caixa de roda de verdade. Capotado também fica certo.
+function wheelMatsFor(c){const U={value:new THREE.Matrix4()},cut={value:c.t.wr+.015};c.wcut=U;const mk=base=>{const m=base.clone();m.onBeforeCompile=sh=>{sh.uniforms.chInv=U;sh.uniforms.cutL=cut;
+  sh.vertexShader='varying vec3 vWp;\n'+sh.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\n vWp=(modelMatrix*vec4(transformed,1.)).xyz;');
+  sh.fragmentShader='uniform mat4 chInv;uniform float cutL;varying vec3 vWp;\n'+sh.fragmentShader.replace('void main() {','void main() {\n if((chInv*vec4(vWp,1.)).y>cutL)discard;')};return m};return[mk(wheelMat),mk(hubMat)]}
 const hubGeo=new THREE.CylinderGeometry(.55,.55,.34,8);hubGeo.rotateX(Math.PI/2);
 const WHEEL_NI=new THREE.CylinderGeometry(1,1,.32,16,1,false,-Math.PI/2,Math.PI).toNonIndexed();WHEEL_NI.rotateX(Math.PI/2); // carros distantes: só a metade de baixo da roda
 const vehicles=[];let vid=0;
@@ -1927,7 +1929,7 @@ function buildCarMesh(c){
  ch.add(body.mesh(carBodyMat,true,true));ch.add(li.mesh(carLightMat,false,false));c.rider=rid.p.length?rid.mesh(carBodyMat,true,false):null;if(c.rider)ch.add(c.rider);
  c.wheels=[];const r=t.wr;
  for(let k=0;k<(t.boat?0:4);k++){const front=k<2,x=front?t.wb:-t.wb,z=(k%2?1:-1)*(t.vtw!==undefined?t.vtw:t.tw);const piv=new THREE.Group();piv.position.set(x,r,z);
-  const w=new THREE.Mesh(wheelGeo,wheelMat);w.scale.set(r,r,1);w.castShadow=true;const hb=new THREE.Mesh(hubGeo,hubMat);hb.scale.set(r,r,1);w.add(hb);piv.add(w);g.add(piv);c.wheels.push({piv,w,front})}
+  if(!c.wms)c.wms=wheelMatsFor(c);const w=new THREE.Mesh(wheelGeo,c.wms[0]);w.scale.set(r,r,1);w.castShadow=true;const hb=new THREE.Mesh(hubGeo,c.wms[1]);hb.scale.set(r,r,1);w.add(hb);piv.add(w);g.add(piv);c.wheels.push({piv,w,front})}
  if(st.night){
   if(c.hasGlow){const ug=new THREE.Mesh(new THREE.PlaneGeometry(L+2.4,W+2.4),new THREE.MeshBasicMaterial({map:glowTex,color:c.glow,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.6}));
   ug.rotation.x=-Math.PI/2;ug.position.y=.06;ug.renderOrder=3;g.add(ug)}
@@ -1939,7 +1941,7 @@ function buildCarMesh(c){
   gl.rotation.x=-Math.PI/2;gl.position.y=.08;gl.renderOrder=3;gl.visible=false;g.add(gl);c.lbGlow=gl}
  if(c.exploded)g.traverse(o=>{if(!o.isMesh)return;if(o.material===carBodyMat)o.material=burntMat;else if(o.material===carLightMat||(o.material&&o.material.blending===THREE.AdditiveBlending))o.visible=false});
  c.g=g;c.ch=ch;scene.add(g);syncCar(c,0)}
-function dropCarMesh(c){if(!c.g)return;c.lb=null;c.lbGlow=null;scene.remove(c.g);c.g.traverse(o=>{if(o.geometry&&o.geometry!==wheelGeo&&o.geometry!==hubGeo)o.geometry.dispose();if(o.material&&o.material!==carBodyMat&&o.material!==carLightMat&&o.material!==wheelMat&&o.material!==hubMat&&o.material!==burntMat)o.material.dispose()});c.g=null;c.ch=null;c.wheels=null}
+function dropCarMesh(c){if(!c.g)return;c.wms=null;c.wcut=null;c.lb=null;c.lbGlow=null;scene.remove(c.g);c.g.traverse(o=>{if(o.geometry&&o.geometry!==wheelGeo&&o.geometry!==hubGeo)o.geometry.dispose();if(o.material&&o.material!==carBodyMat&&o.material!==carLightMat&&o.material!==wheelMat&&o.material!==hubMat&&o.material!==burntMat)o.material.dispose()});c.g=null;c.ch=null;c.wheels=null}
 function ensureDetail(c){const want=c.t.boat||c===PL.car||!c.alive||c.chase||c.police||c.crim||(c===PL.lastCar&&Math.hypot(c.x-PL.x,c.z-PL.z)<80);if(want&&!c.g)buildCarMesh(c);else if(!want&&c.g)dropCarMesh(c)}
 function makeVehicle(type,x,z,a,color){const t=VT[type];const st=STYLES[S.style];
  if(!color)color=type==='taxi'?(st.night?'#ffd21f':'#f2c21a'):type==='bus'?pick2(st.night?['#ff4fa3','#33e6e6','#b388ff','#e8e8f0']:['#d9472b','#2a6ad6','#f2c21a','#e8e6e0']):pick2(st.carCols);
@@ -2077,7 +2079,7 @@ function syncCar(c,dt){
  c.spin-=c.fwd*dt/c.t.wr;
  if(!c.g)return;
  if(c.rider)c.rider.visible=c!==PL.car&&(!!c.ai||c.mode==='rail'||c.chase);
- c.g.position.set(c.x,c.gy+(c.hopY||0)+(c.airY||0)+(c.rampY||0),c.z);c.g.rotation.y=-c.a;c.ch.rotation.set(c.roll,0,c.pitch);
+ c.g.position.set(c.x,c.gy+(c.hopY||0)+(c.airY||0)+(c.rampY||0),c.z);c.g.rotation.y=-c.a;c.ch.rotation.set(c.roll,0,c.pitch);if(c.wcut){c.ch.updateWorldMatrix(true,false);c.wcut.value.copy(c.ch.matrixWorld).invert()}
  for(const w of c.wheels){w.piv.rotation.y=w.front?-c.delta:0;w.w.rotation.z=c.spin}
 }
 
@@ -2797,7 +2799,7 @@ function closeMenu(){if(played&&city.st&&city.st!==STYLES[S.style]){$('#play').c
 $('#menuBtn').addEventListener('click',openMenu);$('#cmdBtn').addEventListener('click',openCmds);$('#cmdBtnMenu').addEventListener('click',openCmds);$('#cmdsClose').addEventListener('click',closeCmds);$('#cmds').addEventListener('click',e=>{if(e.target.id==='cmds')closeCmds()});
 $('#resume').addEventListener('click',closeMenu);
 $('#play').addEventListener('click',()=>startGame(null));
-function startGame(save){if(!save){SAFE.stored=[null,null]}SAFE.cars=[null,null];S.view='fps';VIEW.tp=true;VIEW.orbit=false;CELLS.length=0;WX.f=0;WX.wet=false;WX.lastOpt=undefined;WX.stormCell=null;WX.stormEta=null;WX.pre=0;WX.stormReq=!!S.storm;WX.stormNext=null;rebuildRadio();BOOM.rng=null;initAudio();$('#loading').hidden=false;
+function startGame(save){if(!save){SAFE.stored=[null,null];try{localStorage.removeItem('ps_save')}catch(e){}}SAFE.cars=[null,null];S.view='fps';VIEW.tp=true;VIEW.orbit=false;CELLS.length=0;WX.f=0;WX.wet=false;WX.lastOpt=undefined;WX.stormCell=null;WX.stormEta=null;WX.pre=0;WX.stormReq=!!S.storm;WX.stormNext=null;rebuildRadio();BOOM.rng=null;initAudio();$('#loading').hidden=false;
  setTimeout(()=>{try{generateCity();applyShadows()}catch(err){console.error(err)}$('#loading').hidden=true;running=true;played=true;setView(S.view,true);$('#hud').hidden=false;closeMenu();
   if(save){try{applySave(save)}catch(err){console.error(err)}}else toast(STYLES[S.style].label+' · SEED '+S.seed+'<br><small style="font-size:11px;color:#fff">F perto de um carro para dirigir · seta amarela no mapa: casa segura</small>');saveGame(true)},30)}
 syncSave();
@@ -3060,7 +3062,7 @@ function loadFromFile(file){if(!file)return;const r=new FileReader();r.onload=()
   if(!d||d.v!==1||typeof d.seed!=='number'){toast('ARQUIVO DE SAVE INVÁLIDO');return}
   S.seed=d.seed;if(STYLES[d.style])S.style=d.style;S.size=d.size||S.size;S.hour=Math.floor((d.tod||480)/60)%24;if(d.cfg){applyCfgObj(d.cfg);saveCfg();applyVolumes();try{applyShadows()}catch(e){}}if(d.wxs){S.rain=!!d.wxs.rain;S.storm=!!d.wxs.storm}cfgUI();startGame(d);SAVE.fileT=simT};r.readAsText(file)}
 function readSave(){try{/* save antigo do navegador (só leitura) */const d=JSON.parse(localStorage.getItem('ps_save')||'null');return d&&d.v===1?d:null}catch(e){return null}}
-function syncSave(){const d=readSave();$('#loadSave').hidden=!d||played;$('#saveFile').hidden=!played;$('#saveInfo').textContent=played?'O jogo não salva sozinho: use SALVAR JOGO (ARQUIVO)':d?`Save antigo no navegador: seed ${d.seed} · ${new Date(d.t).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`:''}
+function syncSave(){const d=readSave();$('#loadSave').hidden=!d||played;$('#saveFile').hidden=!played;$('#saveInfo').textContent=played?'O jogo não salva sozinho: use SALVAR JOGO':d?`Save antigo no navegador: seed ${d.seed} · ${new Date(d.t).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`:''}
 function wxState(){const K=['x','z','r','s','max','life','age','big','storm','fading','split','wait'];let wet=null;
  if(WET.wf){const b=new Uint8Array(WET.wf.length);for(let i=0;i<b.length;i++)b[i]=Math.round(WET.wf[i]*255);let t='';for(let i=0;i<b.length;i++)t+=String.fromCharCode(b[i]);wet=btoa(t)}
  return{rain:!!S.rain,storm:!!S.storm,wx:WX.wx,wz:WX.wz,chance:WX.chance,cellT:WX.cellT,stormEta:WX.stormEta,stormMsg:WX.stormMsg,stormDir:WX.stormDir,stormNext:WX.stormNext,cover:WX.cover,coverMsg:WX.coverMsg,pre:WX.pre,

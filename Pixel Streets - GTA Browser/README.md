@@ -412,7 +412,7 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 - **CONFIG → GRÁFICOS → "Reflexos nas poças e no asfalto molhado":** liga e desliga o efeito. Desligar deixa o jogo mais leve em PCs fracos e celulares.
 
 ## Salvar / carregar por arquivo
-- O jogo **não salva mais sozinho no navegador**. No MENU (ESC) use **SALVAR JOGO (ARQUIVO)**: baixa um `.psave` (texto JSON) com seed, estilo, posição, vida, dinheiro, armas, dia/hora, carros da garagem, itens pegos e saltos feitos.
+- O jogo **não salva mais sozinho no navegador**. No MENU (ESC) use **SALVAR JOGO**: baixa um `.psave` (texto JSON) com seed, estilo, posição, vida, dinheiro, armas, dia/hora, carros da garagem, itens pegos e saltos feitos.
 - **CARREGAR ARQUIVO** (no menu inicial ou em jogo) escolhe o `.psave` e volta exatamente de onde parou — funciona em qualquer navegador/PC, sem depender de cookies.
 - Se ainda existir um save antigo do navegador, aparece **CARREGAR SAVE ANTIGO (NAVEGADOR)** para não perder o progresso (ele não é mais atualizado).
 - Ao fechar a aba com mais de 1 min sem salvar, o navegador pergunta se quer mesmo sair.
@@ -469,5 +469,7 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 - **Reflexo da chuva em cima do rio**: a máscara das áreas molhadas era aplicada de cabeça para baixo; agora o molhado fica só em ruas, calçadas e pontes.
 - **Notificações empilhadas**: cada aviso tem seu próprio tempo e eles se encaixam um embaixo do outro (até 4), com a barra de missão em cima; nada mais se sobrepõe.
 - **Rádio**: o nome da música aparece ao entrar no veículo ou ao trocar de música/estação e some depois de 5 s.
-- **Rodas**: a metade de cima de todas as rodas fica oculta (cortada no shader pela altura do centro da roda, então continua certo com a roda girando, esterçando e com o carro inclinado). Elas não atravessam mais a lataria arredondada; nos carros distantes a roda já é só meia roda.
+- **Rodas**: a parte de cima de cada roda fica escondida abaixo da **linha da lataria**, que acompanha a suspensão: quando a carroceria levanta ao acelerar, frear ou inclinar em curva, aparece mais roda naquele lado (como numa caixa de roda de verdade); com o carro capotado também fica certo. Nos carros distantes a roda é meia roda fixa.
 - **CONFIG → RESTAURAR PADRÕES** (no fim do painel): volta volumes (85/80/85%), som, sombras, bloom, reflexos, trânsito 20%, pedestres 75% e controle (vibração 100%, sensibilidade 100%, zona morta 15%, sem inverter) ao padrão. Pede um segundo clique para confirmar.
+
+- Ao começar um **jogo novo**, o save antigo do navegador (do sistema anterior) é apagado e o botão dele some.
