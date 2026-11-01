@@ -441,3 +441,14 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 ## Visual arredondado (agora padrão)
 - **Esquinas com curva suave**: entre ruas estreitas o canto vira um quarto de círculo de calçada; nas avenidas o canto da calçada é cortado em arco. Carros, pedestres, mapa e poças seguem a curva.
 - **Postes** com tubo cilíndrico, braço curvo e luminária oval; **semáforos** cilíndricos com tampas arredondadas e luz em esfera.
+
+## Monitor de desempenho (MENU → MONITOR ou tecla F3)
+- Painel flutuante no canto esquerdo, que fica aberto enquanto você joga (a escolha fica salva). Mostra números e barras (verde/amarelo/vermelho):
+  - **FPS** e tempo de cada quadro.
+  - **CPU**: quanto do tempo de cada quadro o jogo passa calculando e mandando desenhar (thread principal da aba).
+  - **GPU**: tempo real da placa de vídeo por quadro, quando o navegador libera o cronômetro (`EXT_disjoint_timer_query_webgl2`; Chrome/Edge no PC normalmente sim). Senão aparece "n/d".
+  - **RAM**: memória JavaScript da aba (Chrome/Edge).
+  - **VRAM**: estimativa da memória de vídeo (malhas, texturas, buffers de tela, reflexo e sombras).
+  - Chamadas de desenho, triângulos, geometrias e texturas.
+- O navegador não deixa nenhuma página ler o uso real de CPU/GPU/RAM do sistema; os valores são medidos de dentro do jogo e servem para comparar opções (sombras, bloom, reflexos, tamanho da cidade, trânsito).
+- No menu, o botão de carregar agora se chama **CARREGAR SAVE**.

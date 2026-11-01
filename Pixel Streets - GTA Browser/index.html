@@ -35,6 +35,12 @@ canvas#gl{position:fixed;inset:0;display:block;width:100%;height:100%}
 #prompt{position:absolute;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);font-family:var(--f-disp);font-size:14px;padding:6px 12px;background:#000c;border:2px solid var(--acc);white-space:nowrap}
 #prompt kbd{background:var(--acc);color:var(--acc-ink);padding:1px 6px;margin-right:6px;font-family:inherit}
 #toast small{text-shadow:1px 1px 0 #000}
+#mon{position:fixed;left:calc(16px + env(safe-area-inset-left,0px));top:calc(108px + env(safe-area-inset-top,0px));z-index:40;pointer-events:none;width:290px;background:rgba(6,6,14,.78);border:2px solid #2a2a3a;padding:8px 10px;font-family:var(--f-disp);font-size:11px;letter-spacing:.06em;color:#cfd3dc}
+#mon .mh{color:var(--acc);margin-bottom:6px}#mon .mh small{color:#777;font-size:9px}
+#mon .mr{display:grid;grid-template-columns:38px 112px 1fr;align-items:center;gap:6px;margin:4px 0}#mon .mr b{font-weight:normal;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
+#mon i{display:block;height:8px;background:#1a1a26;border:1px solid #333}#mon u{display:block;height:100%;width:0;background:#4ad66d;text-decoration:none;transition:width .25s}
+#mon .mx{margin-top:6px;color:#8a8fa0;font-size:9.5px;line-height:1.5}
+body.touch #mon{top:calc(60px + env(safe-area-inset-top,0px));transform:scale(.85);transform-origin:top left}
 #toast.wx{color:#7cc4ff;top:calc(84px + env(safe-area-inset-top,0px));max-width:min(92vw,620px);font-size:15px;background:rgba(10,30,60,.55);border:2px solid #3a7ac8;padding:8px 14px}#toast.wx small{color:#cfe8ff}
 #toast{position:absolute;left:50%;top:calc(22px + env(safe-area-inset-top,0px));transform:translateX(-50%);font-family:var(--f-disp);font-size:16px;color:var(--acc);text-shadow:3px 3px 0 #000;letter-spacing:.08em;text-align:center;transition:opacity .4s}
 #ko{position:absolute;inset:0;display:grid;place-items:center;background:#300a1066;font-family:var(--f-disp);font-size:clamp(36px,9vw,92px);color:#ff4a4a;text-shadow:6px 6px 0 #000}
@@ -190,8 +196,9 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
     <div class="mfoot">
       <div class="row"><button class="btn" type="button" id="cmdBtnMenu">VER COMANDOS</button><button class="btn" type="button" id="cfgBtnMenu">CONFIG</button><span id="saveInfo" style="color:var(--mute);font-size:18px;margin-left:auto;text-align:right"></span></div>
       <div class="row" style="justify-content:flex-end">
-        <button class="btn" type="button" id="loadSave" hidden>CARREGAR SAVE ANTIGO (NAVEGADOR)</button>
-        <label class="btn" for="loadFile" style="display:inline-block">CARREGAR ARQUIVO</label><input id="loadFile" type="file" accept=".psave,.json,.txt,application/json,text/plain" hidden>
+        <button class="btn" type="button" id="monBtn" style="margin-right:auto">MONITOR</button>
+        <button class="btn" type="button" id="loadSave" hidden>SAVE ANTIGO (NAVEGADOR)</button>
+        <label class="btn" for="loadFile" style="display:inline-block">CARREGAR SAVE</label><input id="loadFile" type="file" accept=".psave,.json,.txt,application/json,text/plain" hidden>
         <button class="btn" type="button" id="saveFile" hidden>SALVAR JOGO (ARQUIVO)</button>
         <button class="btn" type="button" id="resume" hidden>CONTINUAR</button>
         <button class="btn primary" type="button" id="play">GERAR CIDADE E JOGAR</button>
@@ -249,7 +256,7 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
       <div class="cg"><h3>RÁDIO E SOM</h3>
         <div><kbd>R</kbd>liga / desliga o rádio</div><div><kbd>Q</kbd>ou roda do mouse (no carro): próxima música</div><div><kbd>N</kbd>som liga / desliga</div></div>
       <div class="cg"><h3>JOGO</h3>
-        <div><kbd>T</kbd>missão do veículo: corridas no táxi · vigilante na viatura (T de novo encerra)</div><div><kbd>SETA AMARELA</kbd>casa segura: salva e recupera a vida</div><div><kbd>CRUZ VERMELHA</kbd>+50 de vida</div><div><kbd>?</kbd>esta janela</div><div><kbd>ESC</kbd>menu</div></div>
+        <div><kbd>T</kbd>missão do veículo: corridas no táxi · vigilante na viatura (T de novo encerra)</div><div><kbd>SETA AMARELA</kbd>casa segura: salva e recupera a vida</div><div><kbd>CRUZ VERMELHA</kbd>+50 de vida</div><div><kbd>F3</kbd>monitor de desempenho (CPU, GPU, RAM)</div><div><kbd>?</kbd>esta janela</div><div><kbd>ESC</kbd>menu</div></div>
       <div class="cg"><h3>CONTROLE (DUALSENSE / XBOX)</h3>
         <div><kbd>R2</kbd><kbd>L2</kbd>acelerar · freio/ré</div><div><kbd>△</kbd>entrar/sair · <kbd>✕</kbd>pular/freio de mão</div><div><kbd>R1</kbd>atirar · <kbd>L1</kbd>nitro · <kbd>R3</kbd>câmera</div><div><kbd>←→</kbd>arma · <kbd>↑</kbd>rádio · <kbd>↓</kbd>missão</div><div><kbd>TOUCHPAD</kbd>mapa · <kbd>OPTIONS</kbd>menu</div><div>Mapa completo e vibração em CONFIG.</div></div>
       <div class="cg"><h3>CELULAR (TOQUE)</h3>
@@ -257,6 +264,13 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
     </div>
   </div>
 </div>
+<div id="mon" hidden aria-live="off"><div class="mh">MONITOR <small>F3</small></div>
+  <div class="mr"><span>FPS</span><b id="mFps">--</b><i><u id="mFpsB"></u></i></div>
+  <div class="mr"><span>CPU</span><b id="mCpu">--</b><i><u id="mCpuB"></u></i></div>
+  <div class="mr"><span>GPU</span><b id="mGpu">--</b><i><u id="mGpuB"></u></i></div>
+  <div class="mr"><span>RAM</span><b id="mRam">--</b><i><u id="mRamB"></u></i></div>
+  <div class="mr"><span>VRAM</span><b id="mVram">--</b><i><u id="mVramB"></u></i></div>
+  <div class="mx" id="mInfo"></div></div>
 <canvas id="bigmap" hidden></canvas>
 <div id="loading" hidden>GERANDO CIDADE…</div>
 
@@ -2515,6 +2529,7 @@ let cmdsOpen=false;
 function openCmds(){cmdsOpen=true;$('#cmds').hidden=false;for(const k in keys)keys[k]=false;GUN.firing=false;if(document.pointerLockElement)document.exitPointerLock();$('#cmdsClose').focus()}
 function closeCmds(){cmdsOpen=false;$('#cmds').hidden=true}
 addEventListener('keydown',e=>{
+ if(e.code==='F3'){e.preventDefault();monSet(!MON.on);return}
  if(cmdsOpen){if(e.code==='Escape'||e.key==='?'||e.code==='F1'){e.preventDefault();closeCmds()}return}
  if(cfgOpen){if(e.code==='Escape'){e.preventDefault();closeCfg()}return}
  if(TUNE.open){if(e.code==='Escape'||e.code==='Enter'){e.preventDefault();closeTune()}return}
@@ -2675,6 +2690,35 @@ function renderReflection(){const m=WET.mesh;if(!m)return;const on=S.refl!==fals
  if(city.chunks)cullChunks();
  sky.position.copy(sp);renderer.shadowMap.autoUpdate=sm;rain.visible=rv;m.visible=true;if(WET.mesh2)WET.mesh2.visible=true}
 
+/* ================= MONITOR (desempenho desta aba) ================= */
+// O navegador não expõe o uso real de CPU/GPU/RAM de uma aba. Medimos de dentro do jogo:
+//  CPU = tempo de JS+envio de desenho por quadro / intervalo entre quadros (thread principal);
+//  GPU = tempo da placa por quadro via EXT_disjoint_timer_query_webgl2 (quando o navegador libera);
+//  RAM = heap JavaScript (performance.memory, Chrome/Edge); VRAM = estimativa de malhas + texturas + buffers.
+const MON={on:false,last:0,acc:{n:0,busy:0,iv:0},gpu:{ext:null,tried:false,q:[],act:null,ms:0,n:0,sum:0,ok:false},vram:0,vT:0,t:0,cpu:0,fps:0,fms:0};
+function monSet(on){MON.on=on;$('#mon').hidden=!on;$('#monBtn').textContent=on?'MONITOR: LIGADO':'MONITOR';renderer.info.autoReset=!on;try{localStorage.setItem('ps_mon',on?'1':'0')}catch(e){}}
+function monBegin(now){if(!MON.on)return;if(MON.last)MON.acc.iv+=now-MON.last;MON.last=now;renderer.info.reset()}
+function monGpu(start){if(!MON.on)return;const G=MON.gpu,gl=renderer.getContext();
+ if(!G.tried){G.tried=true;try{G.ext=renderer.capabilities.isWebGL2?gl.getExtension('EXT_disjoint_timer_query_webgl2'):null}catch(e){G.ext=null}}
+ if(!G.ext)return;const ext=G.ext;
+ if(start){if(G.act||G.q.length>4)return;const q=gl.createQuery();gl.beginQuery(ext.TIME_ELAPSED_EXT,q);G.act=q}
+ else{if(G.act){gl.endQuery(ext.TIME_ELAPSED_EXT);G.q.push(G.act);G.act=null}
+  while(G.q.length){const q=G.q[0];if(!gl.getQueryParameter(q,gl.QUERY_RESULT_AVAILABLE))break;const dis=gl.getParameter(ext.GPU_DISJOINT_EXT);if(!dis){G.sum+=gl.getQueryParameter(q,gl.QUERY_RESULT)/1e6;G.n++;G.ok=true}gl.deleteQuery(q);G.q.shift()}}}
+function monVram(){let b=0;const geos=new Set(),tex=new Set();scene.traverse(o=>{if(o.geometry&&!geos.has(o.geometry)){geos.add(o.geometry);const g=o.geometry;for(const k in g.attributes){const a=g.attributes[k];if(a.array)b+=a.array.byteLength}if(g.index&&g.index.array)b+=g.index.array.byteLength;
+  if(o.isInstancedMesh){b+=o.instanceMatrix.array.byteLength;if(o.instanceColor)b+=o.instanceColor.array.byteLength}}
+  const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):[];for(const m of ms)for(const k of ['map','emissiveMap','alphaMap','normalMap']){const t=m[k];if(t&&!tex.has(t)){tex.add(t);const im=t.image;if(im&&im.width)b+=im.width*im.height*4*(t.generateMipmaps!==false?1.33:1)}}});
+ const sz=renderer.getDrawingBufferSize(new THREE.Vector2()),px=sz.x*sz.y;b+=px*8;if(composer)b+=px*4*3.5;if(typeof WET!=='undefined'&&WET.rt)b+=WET.rt.width*WET.rt.height*8;if(renderer.shadowMap.enabled&&sun.shadow&&sun.shadow.mapSize)b+=sun.shadow.mapSize.x*sun.shadow.mapSize.y*4;MON.vram=b/1048576}
+function monBar(id,f){const u=$('#'+id);u.style.width=Math.round(clamp(f,0,1)*100)+'%';u.style.background=f>.85?'#ff4a4a':f>.6?'#ffc23a':'#4ad66d'}
+function monEnd(t0,now){if(!MON.on)return;const A=MON.acc;A.busy+=performance.now()-t0;A.n++;MON.t+=1;
+ if(A.iv<500)return;const iv=A.iv/A.n,busy=A.busy/A.n,fps=1000/iv;
+ $('#mFps').textContent=fps.toFixed(0)+' · '+iv.toFixed(1)+'ms';monBar('mFpsB',1-Math.min(1,fps/60)+.0001);$('#mFpsB').style.width=Math.round(clamp(fps/60,0,1)*100)+'%';$('#mFpsB').style.background=fps<30?'#ff4a4a':fps<50?'#ffc23a':'#4ad66d';
+ const cpu=busy/iv;$('#mCpu').textContent=Math.round(cpu*100)+'% · '+busy.toFixed(1)+'ms';monBar('mCpuB',cpu);
+ const G=MON.gpu;if(G.ext&&G.n){const g=G.sum/G.n;$('#mGpu').textContent=Math.round(g/iv*100)+'% · '+g.toFixed(1)+'ms';monBar('mGpuB',g/iv);G.sum=0;G.n=0}
+ else if(!G.ext){$('#mGpu').textContent='n/d';monBar('mGpuB',0)}
+ const pm=performance.memory;if(pm){const u=pm.usedJSHeapSize/1048576,L=pm.jsHeapSizeLimit/1048576;$('#mRam').textContent=u.toFixed(0)+' MB JS';monBar('mRamB',u/Math.min(L,2048))}else{$('#mRam').textContent='n/d';monBar('mRamB',0)}
+ MON.vT-=A.iv;if(MON.vT<=0){MON.vT=3000;try{monVram()}catch(e){}}$('#mVram').textContent='~'+MON.vram.toFixed(0)+' MB';monBar('mVramB',MON.vram/1024);
+ const ri=renderer.info;$('#mInfo').innerHTML=`desenhos ${ri.render.calls} · triângulos ${(ri.render.triangles/1000).toFixed(0)}k · geometrias ${ri.memory.geometries} · texturas ${ri.memory.textures}<br>${G.ext?'GPU: tempo real da placa':'GPU: este navegador não libera o cronômetro'}${pm?'':' · RAM: só no Chrome/Edge'}<br>medido de dentro do jogo (estimativa)`;
+ A.n=0;A.busy=0;A.iv=0}
 /* ================= UI ================= */
 let toastT=0;function toast(html,cls,dur){const t=$('#toast');t.innerHTML=html;t.className=cls||'';t.style.opacity=1;toastT=dur||3}
 function wxToast(title,sub){toast('☁ '+title+(sub?'<br><small style="font-size:11px">'+sub+'</small>':''),'wx',5.5)}
@@ -2997,7 +3041,7 @@ function applySave(d){PL.hp=d.hp||100;try{applyWx(d.wxs)}catch(e){console.error(
  for(const p of peds.slice())if(!p.fixed)removePed(p);for(const v of vehicles.slice())if(v!==PL.car&&(v.mode==='rail'||v.ai))removeVehicle(v);buildCarHash();buildLanes();populate(true);
  for(let i=0;i<pedTarget();i++)spawnPed({x:PL.x,z:PL.z,min:0,max:200});
  toast('JOGO CARREGADO<br><small style="font-size:11px;color:#fff">a seta amarela no mapa é a sua casa segura</small>')}
-$('#saveFile').addEventListener('click',saveToFile);$('#loadFile').addEventListener('change',e=>{loadFromFile(e.target.files[0]);e.target.value=''});
+$('#saveFile').addEventListener('click',saveToFile);$('#monBtn').addEventListener('click',()=>monSet(!MON.on));try{if(localStorage.getItem('ps_mon')==='1')setTimeout(()=>monSet(true),0)}catch(e){}$('#loadFile').addEventListener('change',e=>{loadFromFile(e.target.files[0]);e.target.value=''});
 $('#loadSave').addEventListener('click',()=>{const d=readSave();if(!d)return;S.seed=d.seed;if(STYLES[d.style])S.style=d.style;S.size=d.size||S.size;S.hour=Math.floor((d.tod||480)/60)%24;syncMenu();startGame(d)});
 addEventListener('beforeunload',e=>{if(played&&simT-SAVE.fileT>60){e.preventDefault();e.returnValue=''}});
 
@@ -3079,14 +3123,14 @@ function updateHUD(dt){
  drawMinimap();
 }
 function render(){if(city.chunks)cullChunks();try{renderReflection()}catch(e){console.error(e);S.refl=false}const st=STYLES[S.style];const nb=!st.night&&DN.nightF>.45;if(composer&&S.bloom&&(st.bloom||nb)){bloomPass.threshold=st.night?.62:.7;bloomPass.radius=.4;bloomPass.strength=st.night?(camMode==='top'?.5:.68)*(.3+.7*DN.nightF):.4*DN.nightF;composer.render()}else renderer.render(scene,camera)}
-function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;
+function loop(now){requestAnimationFrame(loop);const _t0=performance.now();monBegin(now);const dt=Math.min(.05,(now-last)/1000);last=now;
  try{padPoll(dt)}catch(e){console.error(e)}
  if(running&&!menuOpen&&!cmdsOpen&&!cfgOpen&&!TUNE.open){update(dt*TS);updateHUD(dt);updateNav(dt)}
  if(NAV.open)drawBigmap();
  if(running)updateHeadlights();
  if(running){updateCamera(menuOpen?0:dt);updateAudio(dt);updateWeather(menuOpen?0:dt);updateLightning(menuOpen?0:dt)}
  else{const t=now/1000;camera.up.set(0,1,0);camera.position.set(Math.cos(t*.1)*40,30,Math.sin(t*.1)*40);camera.lookAt(0,0,0)}
- render()}
+ monGpu(true);render();monGpu(false);monEnd(_t0,now)}
 function applyCfgObj(c){if(!c)return;Object.assign(VOL,c.vol||{});if(typeof c.shadows==='boolean')S.shadows=c.shadows;if(typeof c.bloom==='boolean')S.bloom=c.bloom;if(typeof c.refl==='boolean')S.refl=c.refl;if(typeof c.sound==='boolean')S.sound=c.sound;if(typeof c.traffic==='number')S.traffic=clamp(c.traffic,0,100);if(typeof c.peds==='number')S.peds=clamp(c.peds,0,100);if(c.pad){for(const k of ['vib','sens','dz'])if(typeof c.pad[k]==='number')PAD[k]=c.pad[k];PAD.inv=!!c.pad.inv}}
 try{applyCfgObj(JSON.parse(localStorage.getItem('ps_cfg')||'null'))}catch(e){}
 padCfgSync();
