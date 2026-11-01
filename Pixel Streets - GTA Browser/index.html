@@ -225,8 +225,8 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
     </div></div>
     <div class="msec"><h2>MUNDO</h2>
     <div class="checks" style="margin-top:12px;flex-direction:column;gap:8px"><label hidden><input type="checkbox" id="optRain" checked>Chuva</label>
-      <label><input type="checkbox" id="optStorm">Tempestade (vem e vai, com previsão)</label></div>
-      <p style="margin:8px 0 0;color:var(--mute);font-size:17px">A chuva é natural: cada cidade (seed) tem seu clima, de 0% a 100% de chance de chover, e pode já começar chovendo. A previsão avisa em azul quando uma chuva vai se formar. Tempestade marcada: chega 1h de jogo depois (1 min) e, deixando ligada, volta de tempos em tempos.</p></div>
+      <label><input type="checkbox" id="optStorm">Tempestade ativa</label></div>
+      <p style="margin:8px 0 0;color:var(--mute);font-size:17px">Chega 1h de jogo (1 min real) depois de marcar e, deixando ligada, volta de tempos em tempos.</p></div>
     <div class="msec"><h2>RÁDIO</h2>
     <div class="radiobox">
       
@@ -301,7 +301,7 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
 <div id="cmds" hidden role="dialog" aria-modal="true" aria-labelledby="cmdsT">
   <div class="card px">
     <div class="row"><h2 id="cmdsT" style="margin:0;font-family:var(--f-disp);font-size:18px;letter-spacing:.16em;color:var(--acc)">COMANDOS</h2><button class="btn" type="button" id="cmdsClose" style="margin-left:auto">FECHAR [ESC]</button></div>
-    <div class="ctabs" role="tablist"><button class="btn ctab on" type="button" data-g="0">A PÉ</button><button class="btn ctab" type="button" data-g="1">VEÍCULO</button><button class="btn ctab" type="button" data-g="2">ARMAS</button><button class="btn ctab" type="button" data-g="3">CÂMERA E MAPA</button><button class="btn ctab" type="button" data-g="4">RÁDIO E SOM</button><button class="btn ctab" type="button" data-g="5">JOGO</button><button class="btn ctab" type="button" data-g="6">CONTROLE</button><button class="btn ctab" type="button" data-g="7">CHEATS</button><button class="btn ctab" type="button" data-g="8">CELULAR</button><button class="btn ctab" type="button" data-g="all">TUDO</button></div>
+    <div class="ctabs" role="tablist"><button class="btn ctab on" type="button" data-g="0">A PÉ</button><button class="btn ctab" type="button" data-g="1">VEÍCULO</button><button class="btn ctab" type="button" data-g="2">ARMAS</button><button class="btn ctab" type="button" data-g="3">CÂMERA E MAPA</button><button class="btn ctab" type="button" data-g="4">RÁDIO E SOM</button><button class="btn ctab" type="button" data-g="5">JOGO</button><button class="btn ctab" type="button" data-g="6">CONTROLE</button><button class="btn ctab" type="button" data-g="7">CHEATS</button><button class="btn ctab" type="button" data-g="8">CELULAR</button><button class="btn ctab" type="button" data-g="9">FAQ</button><button class="btn ctab" type="button" data-g="all">TUDO</button></div>
     <div class="cgrid one">
       <div class="cg"><h3>A PÉ</h3>
         <div><kbd>W A S D</kbd><kbd>↑↓←→</kbd>andar</div><div><kbd>SHIFT</kbd>correr</div><div><kbd>ESPAÇO</kbd>pular</div><div><kbd>F</kbd>entrar / roubar veículo</div><div><kbd>R</kbd>soco (ou <kbd>CLIQUE</kbd> sem arma)</div><div><kbd>E</kbd>ação (comprar na loja)</div><div><kbd>MOUSE</kbd>olhar (visão 3D, clique para travar)</div></div>
@@ -324,6 +324,13 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px 18px;margin-top:6px"><div><kbd>HESOYAM</kbd>vida, $250.000 e conserta o carro<br><small>R1 R2 L1 ✕ ← ↓ → ↑ ← ↓ → ↑</small></div><div><kbd>AEZAKMI</kbd>nunca ser procurado (liga/desliga)<br><small>○ → ○ → ← □ △ ↑</small></div><div><kbd>BAGUVIX</kbd>vida infinita (liga/desliga)<br><small>↓ ✕ → ← → R1 → ↓ ↑ △</small></div><div><kbd>FULLCLIP</kbd>munição infinita (liga/desliga)<br><small>L1 R1 □ R1 ← R2 R1 ← □ ↓ L1 L1</small></div><div><kbd>LXGIWYL</kbd>armas 1: pistola e metralhadora<br><small>R1 R2 L1 R2 ← ↓ → ↑ ← ↓ → ↑</small></div><div><kbd>KJKSZPJ</kbd>armas 2: + Colt Magnum<br><small>R1 R2 L1 R2 ← ↓ → ↑ ← ↓ ↓ ←</small></div><div><kbd>UZUMYMW</kbd>armas 3: + bazuca<br><small>R1 R2 L1 R2 ← ↓ → ↑ ← ↓ ↓ ↓</small></div><div><kbd>TURNUPTHEHEAT</kbd>polícia na cola<br><small>R1 R1 ○ R2 ← → ← → ← →</small></div><div><kbd>TURNDOWNTHEHEAT</kbd> / <kbd>ASNAEB</kbd>limpa procurado e zonas vermelhas<br><small>R1 R1 ○ R2 ↑ ↓ ↑ ↓ ↑ ↓</small></div><div><kbd>CPKTNWT</kbd>explode todos os carros por perto<br><small>R2 L2 R1 L1 L2 R2 □ △ ○ △ L2 L1</small></div><div><kbd>AUIFRVQS</kbd>chuva<br><small>R2 ✕ L1 L1 L2 L2 L2 ○</small></div><div><kbd>AFZLLQLL</kbd>sol (limpa chuva e tempestade)<br><small>R2 ✕ L1 L1 L2 L2 L2 ↓</small></div><div><kbd>SPEEDFREAK</kbd>nitro no carro atual</div></div></div>
       <div class="cg"><h3>CELULAR (TOQUE)</h3>
         <div>Joystick à esquerda: andar / dirigir</div><div>Arrastar na tela: olhar em volta</div><div>Botões: tiro, entrar/sair, pulo/freio, correr/nitro, arma, buzina</div><div>No mapa: tocar e segurar marca o destino</div></div>
+      <div class="cg"><h3>FAQ</h3>
+        <div><b>Como funciona a chuva?</b> Ela é natural: cada cidade (seed) tem o seu clima, de 0% a 100% de chance de chover. Com o mesmo seed, o clima é o mesmo, mas o momento de cada chuva é sorteado. Dá para entrar e não chover, ou entrar e já estar chovendo.</div>
+        <div><b>Previsão do tempo</b> A previsão avisa em azul quando uma chuva vai se formar perto de você e mostra no mapa de onde ela vem.</div>
+        <div><b>E a tempestade?</b> Marque "Tempestade ativa" no menu: ela chega 1h de jogo (1 min real) depois, escurece o céu aos poucos e, deixando ligada, volta de tempos em tempos.</div>
+        <div><b>O seed gera sempre a mesma cidade?</b> Sim, com o mesmo seed, tamanho, estilo e versão do jogo. Trânsito, pedestres, chuva e eventos mudam a cada partida.</div>
+        <div><b>Como salvar?</b> MENU → SALVAR JOGO baixa um arquivo .psave; carregue em CARREGAR SAVE. A casa segura recupera a vida e guarda carros na garagem. Usar cheat bloqueia salvar até um jogo novo.</div>
+        <div><b>O jogo está pesado</b> Em CONFIG desligue Sombras, Bloom e Reflexos, e diminua Trânsito e Pedestres. O F3 mostra o monitor de desempenho.</div></div>
     </div>
   </div>
 </div>

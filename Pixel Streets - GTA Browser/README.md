@@ -695,3 +695,7 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 - O momento de cada chuva continua **aleatório**: você pode entrar no jogo e não chover, ou entrar e **já estar chovendo** (a chance de começar chovendo é a mesma do clima da cidade).
 - Saves antigos com a chuva desligada passam a ter chuva natural também.
 - Cheats: **AUIFRVQS** faz chover agora, em cima de você; **AFZLLQLL** limpa o céu e segura a chuva por uns 5 minutos.
+
+## Atualização v85
+- No menu, a opção virou só **Tempestade ativa**, com uma linha curta: chega 1h de jogo (1 min real) depois de marcar e volta de tempos em tempos.
+- A explicação da chuva foi para uma nova aba **FAQ** na janela COMANDOS, junto com respostas rápidas sobre previsão do tempo, tempestade, seed, como salvar e o que fazer se o jogo estiver pesado.
