@@ -330,23 +330,29 @@ scene.add(sun); scene.add(sun.target);
 /* sky dome */
 const CELLS=[],CELLS_U=[];for(let i=0;i<6;i++)CELLS_U.push(new THREE.Vector4(0,0,1,0));
 const skyMat=new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,fog:false,
- uniforms:{top:{value:new THREE.Color()},hor:{value:new THREE.Color()},synth:{value:0},cloud:{value:0},time:{value:0},cloudCol:{value:new THREE.Color(1,1,1)},C:{value:CELLS_U},stormK:{value:new THREE.Vector4(1,0,2,0)},stormB:{value:new THREE.Vector4(2,0,0,0)},camP:{value:new THREE.Vector3()},sunDir:{value:new THREE.Vector3(-.4,.55,-.3)},night:{value:0}},
- vertexShader:`varying vec3 vP;void main(){vP=normalize(position);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
- fragmentShader:`uniform vec3 top,hor,sunDir,cloudCol,camP;uniform float synth,night,cloud,time;varying vec3 vP;
+ uniforms:{top:{value:new THREE.Color()},hor:{value:new THREE.Color()},synth:{value:0},cloud:{value:0},time:{value:0},cloudCol:{value:new THREE.Color(1,1,1)},C:{value:CELLS_U},stormK:{value:new THREE.Vector4(1,0,2,0)},stormB:{value:new THREE.Vector4(2,0,0,0)},camP:{value:new THREE.Vector3()},sunDir:{value:new THREE.Vector3(-.4,.55,-.3)},night:{value:0},moonD:{value:new THREE.Vector4(0,-1,0,1)}},
+ vertexShader:`varying vec3 vPr;void main(){vPr=normalize(position);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+ fragmentShader:`uniform vec3 top,hor,sunDir,cloudCol,camP;uniform float synth,night,cloud,time;uniform vec4 moonD;varying vec3 vPr;
  uniform vec4 C[6];uniform vec4 stormK,stormB;float rf(vec2 q){float r=0.;for(int i=0;i<6;i++){vec4 k=C[i];if(k.w<=0.||(i==0&&stormB.z>.5))continue;float d=length(q-k.xy)/k.z;r=max(r,k.w*smoothstep(.45,.7,k.w)*(1.-smoothstep(.55,1.,d)));}return r;}
  float rfc(vec2 q){float r=0.;for(int i=0;i<6;i++){vec4 k=C[i];if(k.w<=0.||(i==0&&stormB.z>.5))continue;float d=length(q-k.xy)/(k.z*3.);r=max(r,k.w*(1.-smoothstep(.35,1.,d)));}return r;}
  float hh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
  float nz(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hh(i),hh(i+vec2(1.,0.)),f.x),mix(hh(i+vec2(0.,1.)),hh(i+vec2(1.,1.)),f.x),f.y);}
  float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*nz(p);p*=2.03;a*=.5;}return v;}
- void main(){float h=vP.y;vec3 c=mix(hor,top,pow(clamp(h,0.,1.),.55));if(h<0.)c=hor*.55;
+ void main(){vec3 vP=normalize(vPr);float h=vP.y;vec3 c=mix(hor,top,pow(clamp(h,0.,1.),.55));if(h<0.)c=hor*.55;
  if(synth>.5){vec3 sd=normalize(sunDir);float d=distance(vP,sd);float sun=smoothstep(.27,.26,d);
   float st=step(.45,fract(vP.y*70.));float cut=smoothstep(sd.y+.02,sd.y-.2,vP.y);sun*=mix(1.,st,cut);
   vec3 sc=mix(vec3(1.,.86,.25),vec3(1.,.18,.6),clamp((sd.y+.25-vP.y)/.5,0.,1.));
   c=mix(c,sc,sun);c+=vec3(1.,.3,.6)*.35*exp(-d*5.);
   float s=fract(sin(dot(floor(vP*380.),vec3(12.9898,78.233,37.719)))*43758.5453);c+=step(.9975,s)*smoothstep(.15,.45,h)*.9*night;
- }else{vec3 sd=normalize(sunDir);float up=smoothstep(-.1,.05,sd.y);c+=(vec3(1.,.95,.8)*pow(max(dot(vP,sd),0.),220.)*1.6+vec3(1.,.8,.6)*pow(max(dot(vP,sd),0.),8.)*.2)*up;
+ }else{vec3 sd=normalize(sunDir);float up=smoothstep(-.1,.05,sd.y);float sdt=dot(vP,sd);c+=vec3(1.,.97,.88)*smoothstep(.99955,.99975,sdt)*1.4*up;c+=(vec3(1.,.95,.8)*pow(max(sdt,0.),220.)*1.1+vec3(1.,.8,.6)*pow(max(dot(vP,sd),0.),8.)*.2)*up;
   float s=fract(sin(dot(floor(vP*380.),vec3(12.9898,78.233,37.719)))*43758.5453);c+=step(.997,s)*smoothstep(.1,.4,h)*night*.8;
-  vec3 md=normalize(vec3(.35,.6,.4));c+=vec3(.8,.85,1.)*smoothstep(.9985,.999,dot(vP,md))*night;}
+  vec3 md=normalize(moonD.xyz);float mup=smoothstep(-.04,.06,md.y)*(.3+.7*night);
+  if(mup>0.){vec3 mx=normalize(cross(md,vec3(0.,1.,0.)));vec3 my=cross(mx,md);float rad=.03;vec2 p=vec2(dot(vP,mx),dot(vP,my))/rad;float r2=dot(p,p);float dm=dot(vP,md);
+   if(dm>0.){float lf=abs(moonD.w);c+=vec3(.55,.65,.9)*exp(-max(0.,1.-dm)*90.)*.25*lf*mup;
+    if(r2<1.){vec3 n=vec3(p,sqrt(1.-r2));float fw=abs(moonD.w);float a=fw<.01?3.1416:(1.-fw)*3.1416*(moonD.w<0.?-1.:1.);
+     vec3 L=vec3(sin(a),0.,cos(a));float lit=smoothstep(-.06,.06,dot(n,L));
+     float cr=nz(p*2.6+3.)*.55+nz(p*6.+9.)*.3;vec3 mc=vec3(.95,.94,.88)*(1.-cr*.35);
+     float edge=smoothstep(1.,.9,r2);c=mix(c,mix(c*.55+vec3(.03,.035,.05),mc,lit),edge*mup);}}}}
  float sAl=dot(vP.xz,stormK.xy),sN=fbm(vP.xz/(abs(h)+.18)*1.7+vec2(time*.012,time*.005))-.5,sAl2=sAl+sN*.5*smoothstep(-.02,.12,h);
  float msk=stormK.w*smoothstep(stormK.z-.2,stormK.z+.2,sAl2)*(1.-smoothstep(stormB.x-.2,stormB.x+.2,sAl2));
  c=mix(c,c*.38,msk*.8);
@@ -628,7 +634,7 @@ function generateCity(){
    while(t<end-4){const w=Math.min(rr(10,22),end-t);const h=night?rr(16,48):rr(12,34);const part=horiz?[t+.3,z0,t+w-.3,z1,face,h]:[x0,t+.3,x1,t+w-.3,face,h];
     const wet=city.water&&city.water.some(r=>part[0]<r[2]&&part[2]>r[0]&&part[1]<r[3]&&part[3]>r[1]);if(!wet){if(isRural((part[0]+part[2])/2,(part[1]+part[3])/2))city.wild.push(part);else city.ring.push(part)}t+=w}}}
  buildMinimap(st);
- DN.tod=S.hour*60;DN.t=0;updateDayNight(0,true);
+ DN.tod=S.hour*60;DN.day=0;DN.t=0;updateDayNight(0,true);
  PL.car=null;PL.x=E/2;PL.z=E/2;streamChunks(true);spawnPlayer();streamChunks(true);
  buildCarHash();buildLanes();populate(true);
  for(let i=0;i<pedTarget();i++)spawnPed({x:PL.x,z:PL.z,min:0,max:200});
@@ -1485,17 +1491,22 @@ const SKYK_S=[[0,'#0b0420','#ff3d7f'],[4.8,'#1a0838','#ff5a8a'],[6,'#5a2a8a','#f
 const SKYK=[[0,'#0a1028','#1b2440'],[4.8,'#121a3a','#2a2c52'],[6,'#3a5490','#f09a70'],[7.3,'#6fa6de','#d4e4ef'],[16.8,'#6fa6de','#d4e4ef'],[18.2,'#3a4f9a','#ff8a50'],[19.4,'#141c40','#3a2a50'],[24,'#0a1028','#1b2440']];
 const _v4=new THREE.Vector3(),_c1=new THREE.Color(),_c2=new THREE.Color(),_c3=new THREE.Color(),_c4=new THREE.Color();
 function skyAt(h,top,hor){const K=STYLES[S.style].night?SKYK_S:SKYK;for(let i=0;i<K.length-1;i++){const a=K[i],b=K[i+1];if(h>=a[0]&&h<=b[0]){const t=(h-a[0])/(b[0]-a[0]);top.set(a[1]).lerp(_c3.set(b[1]),t);hor.set(a[2]).lerp(_c4.set(b[2]),t);return}}}
+const MOON=[{n:'LUA NOVA',w:0,light:.35,ic:'🌑'},{n:'LUA CRESCENTE',w:-.5,light:.7,ic:'🌓'},{n:'LUA CHEIA',w:1,light:1.25,ic:'🌕'},{n:'LUA MINGUANTE',w:.5,light:.7,ic:'🌗'}];
+function moonPhase(){return(((DN.day||0)+(S.seed|0))%4+4)%4}
 function updateDayNight(dt,force){const st=STYLES[S.style];const clk=$('#clock');
- DN.tod=(DN.tod+dt)%1440;const h=DN.tod/60;const ph=(h-6)/12*Math.PI,elev=Math.sin(ph);
+ {const pt=DN.tod;DN.tod=(DN.tod+dt)%1440;if(pt<720&&DN.tod>=720){DN.day=(DN.day||0)+1}
+  if(played&&pt<1110&&DN.tod>=1110&&!st.night){const m=MOON[moonPhase()];toast(m.ic+' HOJE À NOITE: '+m.n,'wx',4.5)}}const h=DN.tod/60;const ph=(h-6)/12*Math.PI,elev=Math.sin(ph);
  const dayF=clamp((elev+.12)/.37,0,1),nf=1-dayF;DN.nightF=nf;
- clk.hidden=!played;const hh=Math.floor(h),mm=Math.floor(DN.tod%60);clk.innerHTML=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+'<small>'+(h<5||h>=19.5?'NOITE':h<7?'AMANHECER':h<12?'MANHÃ':h<17.5?'TARDE':'ANOITECER')+'</small>';
+ clk.hidden=!played;const hh=Math.floor(h),mm=Math.floor(DN.tod%60);clk.innerHTML=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0')+'<small>'+(h<5||h>=19.5?'NOITE'+(st.night?'':' · '+MOON[moonPhase()].ic):h<7?'AMANHECER':h<12?'MANHÃ':h<17.5?'TARDE':'ANOITECER')+'</small>';
  DN.t-=dt;if(DN.t>0&&!force)return;DN.t=.25;
  // sun / moon
  let dir;if(elev>-.05){dir=new THREE.Vector3(Math.cos(ph)*.85,Math.max(.08,elev),-.38).normalize()}else dir=new THREE.Vector3(.35,.9,.4).normalize();
+ {const mph=ph+Math.PI,mel=Math.sin(mph);const ph4=moonPhase();skyMat.uniforms.moonD.value.set(Math.cos(mph)*.85,mel,.38,MOON[ph4].w);
+  if(elev<=-.05){const lw=MOON[ph4].light;if(mel>.08)dir=new THREE.Vector3(Math.cos(mph)*.85,mel,.38).normalize();DN.moonL=lw}else DN.moonL=1}
  city.sunOff=[dir.x*150,dir.y*150,dir.z*150];skyMat.uniforms.sunDir.value.set(Math.cos(ph)*.85,elev,-.38);skyMat.uniforms.night.value=nf;
  if(st.night&&elev<.08)skyMat.uniforms.sunDir.value.lerp(_v4.set(-1,.11,0),clamp((.08-elev)/.25,0,1));
  const low=clamp(1-elev*2.2,0,1),SY=st.night;sun.color.set(SY?'#fff0f4':'#fff0d8').lerp(_c1.set(SY?'#ff7ab0':'#ffa868'),low*dayF).lerp(_c2.set(SY?'#b09aff':'#8aa0ff'),nf);
- sun.intensity=(.98*clamp(elev*3.5,0,1)+.16*nf)*(1-.7*WX.f);
+ sun.intensity=(.98*clamp(elev*3.5,0,1)+.16*nf*(DN.moonL==null?1:DN.moonL))*(1-.7*WX.f);
  hemi.intensity=(.2+.38*dayF)*(1-.22*WX.f);hemi.color.set(SY?'#ffd8f2':'#dde9ff').lerp(_c1.set(SY?'#6a4ab0':'#3a4a7a'),nf);hemi.groundColor.set(SY?'#5a4a6a':'#5f564c').lerp(_c2.set(SY?'#1a0c28':'#14141c'),nf);
  skyAt(h,skyMat.uniforms.top.value,skyMat.uniforms.hor.value);{const gf=WX.f*(1-.7*(WX.stormAmt||0));skyMat.uniforms.top.value.lerp(_c1.set(nf>.5?'#15171e':'#6a7078'),gf*.65);skyMat.uniforms.hor.value.lerp(_c2.set(nf>.5?'#24262e':'#9aa0a6'),gf*.6)}
  const fc=_c1.copy(skyMat.uniforms.hor.value).lerp(_c2.set(st.fog),dayF*.6);if(scene.fog)scene.fog.color.copy(fc);scene.background.copy(fc).multiplyScalar(.85);
@@ -2822,13 +2833,13 @@ function updateSafe(dt){const t=simT;SAFE.lock=Math.max(0,SAFE.lock-dt);
  else if(PL.inside&&Math.hypot(PL.x-SAFE.IN.x,PL.z-(SAFE.IN.z+4-.9))<.8)exitSafe();
  if(!PL.inside){SAFE.saveT-=dt;if(SAFE.saveT<=0){SAFE.saveT=20;if(!POL.wanted)saveGame(true)}}}
 function saveGame(quiet){if(!played||PL.dead)return;try{const c=PL.car,s=PL.inside&&city.safe?city.safe:null;if(GUN.has&&GUN.inv[GUN.w])GUN.inv[GUN.w].ammo=GUN.ammo;
- const d={v:1,t:Date.now(),seed:S.seed,style:S.style,size:S.size,tod:DN.tod,x:s?s.x:PL.x,z:s?s.z:PL.z,hp:Math.max(1,Math.round(PL.hp)),car:c&&c.alive&&!c.t.boat?{type:c.type,color:c.color,a:c.a,hp:c.hp,nitro:!!c.hasNitro}:null,garage:SAFE.stored,gun:{w:GUN.w,inv:GUN.inv},money:PL.money||0,picked:[...city.picked].slice(-400),stunts:[...(city.stunts||[])],wx:WX.wx,wz:WX.wz};
+ const d={v:1,t:Date.now(),seed:S.seed,style:S.style,size:S.size,tod:DN.tod,day:DN.day||0,x:s?s.x:PL.x,z:s?s.z:PL.z,hp:Math.max(1,Math.round(PL.hp)),car:c&&c.alive&&!c.t.boat?{type:c.type,color:c.color,a:c.a,hp:c.hp,nitro:!!c.hasNitro}:null,garage:SAFE.stored,gun:{w:GUN.w,inv:GUN.inv},money:PL.money||0,picked:[...city.picked].slice(-400),stunts:[...(city.stunts||[])],wx:WX.wx,wz:WX.wz};
  localStorage.setItem('ps_save',JSON.stringify(d));if(!quiet)toast('JOGO SALVO');syncSave()}catch(e){}}
 function readSave(){try{const d=JSON.parse(localStorage.getItem('ps_save')||'null');return d&&d.v===1?d:null}catch(e){return null}}
 function syncSave(){const d=readSave();$('#loadSave').hidden=!d;$('#saveInfo').textContent=d?`Salvo: ${STYLES[d.style]?STYLES[d.style].label:d.style} · seed ${d.seed} · ${new Date(d.t).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`:''}
 function applySave(d){PL.hp=d.hp||100;PL.money=d.money||0;GUN.inv=d.gun&&d.gun.inv||{};GUN.has=false;GUN.ammo=0;const w=d.gun&&d.gun.w;if(w&&GUN.inv[w])gunSelect(w,true);else{const k=Object.keys(GUN.inv)[0];if(k)gunSelect(k,true)}
  for(const id of d.picked||[])city.picked.add(id);city.stunts=new Set(d.stunts||[]);for(const p of pickups.slice())if(city.picked.has(p.id))removePickup(p);
- if(typeof d.tod==='number'){DN.tod=d.tod;updateDayNight(0,true)}
+ if(typeof d.tod==='number'){DN.tod=d.tod;DN.day=d.day||0;updateDayNight(0,true)}
  let x=d.x,z=d.z;const o={x,z};circleVsWorld(o,.6);if(inWater(o.x,o.z)||!isFinite(o.x)){if(city.safe){o.x=city.safe.x;o.z=city.safe.z}}PL.x=o.x;PL.z=o.z;PL.vx=PL.vz=0;camT.x=PL.x;camT.z=PL.z;
  streamChunks(true);for(const p of pickups.slice())if(city.picked.has(p.id))removePickup(p);
  SAFE.stored=Array.isArray(d.garage)?d.garage.slice(0,2):[d.garage||null,null];SAFE.cars=[null,null];if(d.car&&VT[d.car.type]){const c=makeVehicle(d.car.type,PL.x,PL.z,d.car.a||0,d.car.color);c.hasNitro=!!d.car.nitro;c.hp=Math.max(25,d.car.hp||100);c.sleep=false;c.hand=false;if(d.car.type==='super'){c.special=true;c.hasGlow=true}

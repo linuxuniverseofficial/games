@@ -395,3 +395,10 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 - Ao enfraquecer, o céu começa a limpar **pelo mesmo lado** de onde ela veio e a parte escura atravessa o céu até sumir no lado oposto. Com chuva ligada, ela se quebra em pancadas isoladas. Depois a opção volta para "Sem tempestade". Funciona mesmo com a chuva comum desligada.
 - **Chuva normal**: cada célula nova agora é anunciada antes de se formar ("chuva se formando a nordeste em ~30 min · vindo na sua direção" ou "bem aqui"). A célula leva alguns minutos para aparecer.
 - Os avisos da previsão aparecem numa caixa azul no centro, um pouco abaixo dos avisos normais.
+
+## Sol e lua
+- O sol agora é um **disco redondo** (antes ele pegava o formato dos triângulos da esfera do céu).
+- A **lua nasce quando o sol se põe e se põe quando ele nasce**, sempre no lado oposto do céu, e é escondida pelas nuvens.
+- **4 fases**, uma por noite em sequência: **nova → crescente → cheia → minguante** (a fase inicial depende da seed). Desenhadas no padrão do hemisfério sul: a crescente aparece iluminada à esquerda e a minguante à direita. A lua nova fica quase invisível.
+- A claridade da noite muda com a fase: lua cheia ilumina bem mais, lua nova deixa a cidade mais escura. Com a lua alta, a luz da noite vem da direção dela.
+- Às 18:30 aparece em azul o aviso da noite, por exemplo "🌕 HOJE À NOITE: LUA CHEIA". O relógio mostra o ícone da fase durante a noite. A contagem dos dias é salva junto com o jogo.
