@@ -119,6 +119,7 @@ body.touch #money{top:calc(14px + env(safe-area-inset-top,0px));left:calc(160px 
 :is(#menu,#cfg,#cmds,#tune,#ward) :is(h2,h3,.btn,kbd){font-weight:700}
 #hud,#mon,#notes,#toast,#tvbar,#wheel,#touch,#ko{font-weight:700}
 #vbars{display:flex;gap:8px}#vbars:not(:has(.bar:not([hidden]))){display:none}.bar.half{width:98px}.bar.half b{font-size:10px;letter-spacing:.02em}body.touch #hpwrap .bar.half{width:68px}@media (max-width:560px){.bar.half{width:68px}}
+#resume{background:#2fbf57;color:#06210f;border-color:#2fbf57}#resume:hover,#resume:focus-visible{background:#45d96d;border-color:#ffffff}
 #ward .msec h2{font-family:var(--f-disp);font-size:13px;letter-spacing:.14em;color:var(--acc);margin:0 0 8px}
 #cfg,#tune,#ward{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#000b;overflow:auto;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 #cfg .card,#tune .card,#ward .card{width:min(640px,100%);padding:20px 22px;display:grid;gap:16px}
@@ -223,9 +224,9 @@ select,input[type=text]{font-family:var(--f-body);font-size:20px;background:#000
       <div class="field"><label for="hour">HORA INICIAL <output id="hourOut">08:00</output></label><input id="hour" type="range" min="0" max="23" value="8"></div>
     </div></div>
     <div class="msec"><h2>MUNDO</h2>
-    <div class="checks" style="margin-top:12px;flex-direction:column;gap:8px"><label><input type="checkbox" id="optRain">Chuva (células de chuva pela cidade)</label>
+    <div class="checks" style="margin-top:12px;flex-direction:column;gap:8px"><label hidden><input type="checkbox" id="optRain" checked>Chuva</label>
       <label><input type="checkbox" id="optStorm">Tempestade (vem e vai, com previsão)</label></div>
-      <p style="margin:8px 0 0;color:var(--mute);font-size:17px">A previsão do tempo avisa em azul quando uma chuva vai se formar. Tempestade marcada: chega 1h de jogo depois (1 min) e, deixando ligada, volta de tempos em tempos.</p></div>
+      <p style="margin:8px 0 0;color:var(--mute);font-size:17px">A chuva é natural: cada cidade (seed) tem seu clima, de 0% a 100% de chance de chover, e pode já começar chovendo. A previsão avisa em azul quando uma chuva vai se formar. Tempestade marcada: chega 1h de jogo depois (1 min) e, deixando ligada, volta de tempos em tempos.</p></div>
     <div class="msec"><h2>RÁDIO</h2>
     <div class="radiobox">
       
@@ -365,7 +366,7 @@ function musVol(){return VOL.master*VOL.music}
 function applyVolumes(){if(master)master.gain.value=S.sound?.55*VOL.master*VOL.sfx:0;if(musicBus)musicBus.gain.value=S.sound?1.1*VOL.master*VOL.music:0}
 function cfgObj(){return{vol:{...VOL},shadows:S.shadows,bloom:S.bloom,refl:S.refl!==false,sound:S.sound,traffic:S.traffic,peds:S.peds,pad:{vib:PAD.vib,sens:PAD.sens,dz:PAD.dz,inv:PAD.inv}}}
 function saveCfg(){try{localStorage.setItem('ps_cfg',JSON.stringify(cfgObj()))}catch(e){}}
-const S={hour:8,view:'fps',style:'modern',seed:(Math.random()*1e6)|0,size:14,rain:false,storm:false,traffic:20,peds:75,shadows:true,bloom:true,sound:true};
+const S={hour:8,view:'fps',style:'modern',seed:(Math.random()*1e6)|0,size:14,rain:true,storm:false,traffic:20,peds:75,shadows:true,bloom:true,sound:true};
 
 const STYLES={
  modern:{label:'MODERN',sky:[0x6fa6de,0xd4e4ef],fog:0xc9d4dc,fogNear:160,fogFar:600,bg:0x55585c,
@@ -442,7 +443,7 @@ const skyMat=new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,fog:
   vec3 cc=mix(cloudCol,cloudCol*.5,smoothstep(.45,.95,n)*cv);cc*=mix(1.,.3,msk);cc*=mix(1.,.2,gcl);c=mix(c,cc,cl*mix(.92,.99,msk));
   if(fair>.01){vec2 fu=vP.xz/(h+.12)*3.4+vec2(time*.02,time*.008)+vec2(11.3,7.1);float fn=fbm(fu)*.75+nz(fu*3.1)*.25;float fc=.16+fair*.36;float fa=smoothstep(1.-fc-.06,1.-fc+.16,fn)*smoothstep(.03,.25,h)*(1.-cl)*.55;c=mix(c,mix(cloudCol,vec3(1.),.35)*(1.-.12*smoothstep(.5,.9,fn)),fa);}}
  gl_FragColor=vec4(c,1.);}`});
-const sky=new THREE.Mesh(new THREE.SphereGeometry(1500,32,16),skyMat); sky.renderOrder=-10; sky.frustumCulled=false; scene.add(sky);
+const sky=new THREE.Mesh(new THREE.SphereGeometry(1500,32,16),skyMat); sky.renderOrder=-10; sky.frustumCulled=false; sky.layers.set(1); scene.add(sky);
 
 /* ================= TEXTURES ================= */
 function glowTexture(){const c=cv(64,64),g=c.getContext('2d');const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.35,'rgba(255,255,255,.5)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)}
@@ -2180,7 +2181,7 @@ function buildChunk(ci,cj){const key=ci+','+cj;if(city.chunks.has(key))return;
    if(night)for(const sd of [-1,1])glow.flat(cx2-6,cz2-6,cx2+6,cz2+6,.3,COL('#ffd9a0').multiplyScalar(.25))}}
  curRi=-1;curI=null;for(const rp of city.ring){const[x0,z0,x1,z1,face,h]=rp;if(!own((x0+x1)/2,(z0+z1)/2))continue;building(x0,z0,x1,z1,h,{simple:true,face})}
  /* --- assemble --- */
- const add=(mb,mat,cast,recv,ro)=>{const m=mb.mesh(mat,cast,recv);if(m){ch.group.add(m);if(ro)m.renderOrder=ro}return m};
+ const reflOK=new Set([walls,roofs,roofs2,neon,hwin,glow]);const add=(mb,mat,cast,recv,ro)=>{const m=mb.mesh(mat,cast,recv);if(m){ch.group.add(m);if(ro)m.renderOrder=ro;if(!reflOK.has(mb))m.layers.set(1)}return m};
  ch.binMesh=add(bins,M.solid,true,true);ch.tlpMesh=add(tlp,M.solid,true,true);
  add(walls,M.wall,true,true);add(roofs,M.solid,false,true);add(det,M.solid,true,true);add(side,M.solid,false,true);add(roofs2,M.solid2,true,true);add(hwin,M.hwin,false,false);
  add(bedMb,M.bed,false,true);add(wat,M.water,false,true,1);add(waveMb,M.wave,false,false,2);add(sandMb,M.sand,false,true,1);add(foamMb,M.foam,false,false,3);add(signs,M.sign,false,false,4);add(fence,M.fence,false,false);add(marks,M.mark,false,true);ch.plantMesh=add(plants,M.plant,true,true);add(neon,M.neon,false,false);add(glow,M.glow,false,false,2);
@@ -2267,7 +2268,7 @@ function breakTL(b,c){b.dead=true;const t=b.tl,ch=t.ch;if(t.broken||!ch||!ch.tlp
  let dx=c.vx,dz=c.vz;const sp=Math.hypot(dx,dz)||1;dx/=sp;dz/=sp;fallers.push({g:grp,ax:new THREE.Vector3(dz,0,-dx),th:0,om:Math.min(2.5,sp*.12)+.4,done:false,tip:[t.px+dx*5.4,t.pz+dz*5.4]});
  if(fallers.length>40){const o=fallers.shift();city.group.remove(o.g)}
  for(let i=0;i<16;i++)emit(t.px,.6+Math.random()*4.5,t.pz,(Math.random()-.5)*7+dx*3,Math.random()*4,(Math.random()-.5)*7+dz*3,.45,.22,.06,0xffd060,true,1);
- const key=t.kx*1000+t.kz;if(!city.broken.has(key)){city.broken.add(key);if(Math.hypot(t.px-PL.x,t.pz-PL.z)<60)toast('SEMÁFORO EM PANE<br><small style="font-size:11px;color:#fff">cruzamento sem controle</small>')}
+ const key=t.kx*1000+t.kz;if(!city.broken.has(key)){city.broken.add(key);if(Math.hypot(t.px-PL.x,t.pz-PL.z)<60)toast('SEMÁFORO EM PANE<br><small style="font-size:11px;color:#fff">piscando amarelo</small>')}
  c.vx*=.82;c.vz*=.82;sparkSound(.8);TL.t=0}
 function knockBin(b,vx,vz){if(b.dead)return;b.dead=true;const t=b.bin,ch=t&&t.ch;if(!ch||!ch.binMesh)return;
  const g=ch.binMesh.geometry,pa=g.attributes.position,na=g.attributes.normal,co=g.attributes.color,n=t.v1-t.v0;const pos=new Float32Array(n*3),nor=new Float32Array(n*3),col=new Float32Array(n*3);
@@ -2410,7 +2411,7 @@ function forecastCell(c,eta){const pc=PL.car||PL,dx=c.x-pc.x,dz=c.z-pc.z,d=Math.
  if(d<c.r*.8)where='SOBRE VOCÊ';else where='AO '+dirName(dx,dz);const toward=(WX.wx||0)*(-dx)+(WX.wz||0)*(-dz)>0&&d>c.r*.8;
  sub='chuva se formando '+(where==='SOBRE VOCÊ'?'bem aqui':where.toLowerCase())+' em ~'+Math.max(5,Math.round(eta/5)*5)+' min'+(toward?' · vindo na sua direção':'');wxToast('PREVISÃO DO TEMPO',sub)}
 function stepCells(dt){if(!city.ext)return;
- if(S.rain){WX.cellT=(WX.cellT||60)-dt;if(WX.cellT<=0){WX.cellT=35+Math.random()*75;if(CELLS.length<4&&Math.random()<(WX.chance||.25)){const c=spawnCell(Math.random()<.35);c.wait=15+Math.random()*25;if(played)forecastCell(c,c.wait+20)}}}
+ if(S.rain){WX.cellT=(WX.cellT||60)-dt;if(WX.cellT<=0){WX.cellT=35+Math.random()*75;if(CELLS.length<4&&Math.random()<(WX.chance===undefined?.25:WX.chance)){const c=spawnCell(Math.random()<.35);c.wait=15+Math.random()*25;if(played)forecastCell(c,c.wait+20)}}}
  for(const c of CELLS){if(!c.big){c.x+=WX.wx*dt;c.z+=WX.wz*dt}if(c.wait>0){c.wait-=dt;if(!S.rain){c.wait=0;c.dead=true}continue}if(c.storm&&!c.fading&&(WX.cover||0)<.9)continue;c.age+=dt;if(!S.rain&&!c.storm)c.life=Math.min(c.life,c.age);if(c.dead){c.s=0;continue}
   if(c.age<c.life)c.s=Math.min(c.max,c.s+dt/(c.storm?55:40)*c.max);
   else{if(c.storm&&!c.fading){c.fading=true;if(played)wxToast('PREVISÃO DO TEMPO','a tempestade está perdendo força'+(S.rain?' · ficam pancadas isoladas':''))}if(c.big&&!c.split&&S.rain){c.split=true;const pc=PL.car||PL;for(let k=0;k<1+(Math.random()<.5?1:0);k++){const a=Math.random()*6.283,d=120+Math.random()*350;spawnCell(false,{x:pc.x+Math.cos(a)*d,z:pc.z+Math.sin(a)*d,r:180+Math.random()*220,s:c.s})}}
@@ -2418,7 +2419,10 @@ function stepCells(dt){if(!city.ext)return;
  for(let i=CELLS.length-1;i>=0;i--)if((CELLS[i].s<=0&&CELLS[i].age>1&&!(CELLS[i].wait>0))||CELLS[i].dead){if(CELLS[i].storm&&WX.stormCell===CELLS[i]){WX.stormCell=null;if(S.storm){WX.stormNext=180+Math.random()*180;if(played)wxToast('PREVISÃO DO TEMPO','céu limpando · nova tempestade em ~'+Math.round(WX.stormNext/60)+'h')}}CELLS.splice(i,1)}
  for(let i=0;i<6;i++){const c=CELLS[i];if(c)CELLS_U[i].set(c.x,c.z,c.r,c.s);else CELLS_U[i].set(0,0,1,0)}}
 function updateWeather(dt){const st=STYLES[S.style];
- if(S.rain!==WX.lastOpt){WX.lastOpt=S.rain;if(S.rain&&city.ext){const a=Math.random()*6.283,w=3+Math.random()*4;WX.wx=Math.cos(a)*w;WX.wz=Math.sin(a)*w;WX.chance=.15+Math.random()*.25;{const pc=PL.car||PL,r=230+Math.random()*90,a2=Math.atan2(-WX.wz,-WX.wx)+(Math.random()-.5)*.6,d=r*.5;const c=spawnCell(false,{x:pc.x+Math.cos(a2)*d,z:pc.z+Math.sin(a2)*d,r,s:0});c.max=.85;c.life=90+Math.random()*90;if(played)setTimeout(()=>forecastCell(c,40),400)}WX.cellT=60}}
+ if(S.rain!==WX.lastOpt){WX.lastOpt=S.rain;if(S.rain&&city.ext){const a=Math.random()*6.283,w=3+Math.random()*4;WX.wx=Math.cos(a)*w;WX.wz=Math.sin(a)*w;
+  // clima da cidade: cada seed tem a sua chance de chuva (0% a 100%); o momento de cada chuva continua aleatório
+  {const sr=mulberry32((S.seed^0x7a1b2c3d)>>>0);sr();WX.chance=Math.pow(sr(),1.15)}WX.cellT=20+Math.random()*60;
+  if(Math.random()<WX.chance){const pc=PL.car||PL,r=230+Math.random()*120;const c=spawnCell(false,{x:pc.x+(Math.random()-.5)*60,z:pc.z+(Math.random()-.5)*60,r,s:.8});c.max=.8+Math.random()*.15;c.s=c.max;c.wait=0;c.life=90+Math.random()*120;WX.f=.8}}}
  // tempestade agendada: previsão 1h de jogo (1 min real) antes
  if(WX.stormNext!=null&&S.storm){WX.stormNext-=dt;if(WX.stormNext<=0){WX.stormNext=null;WX.stormReq=true}}
  if(WX.stormReq&&played&&!menuOpen&&city.ext){WX.stormReq=false;if(!WX.stormCell){WX.stormEta=60;WX.stormMsg=60;WX.stormDir=Math.random()*6.283;wxToast('PREVISÃO DO TEMPO: TEMPESTADE EM 1H','vindo do '+dirName(Math.cos(WX.stormDir),Math.sin(WX.stormDir)).toLowerCase()+' · céu vai fechar sobre toda a cidade, com raios e ventania')}}
@@ -2434,7 +2438,7 @@ function updateWeather(dt){const st=STYLES[S.style];
   let front=1.6,back=1.6,amt=0;const k=sc?clamp(sc.s/sc.max,0,1):0;
   if(sc&&!sc.fading){WX.cover=Math.min(1,(WX.cover||0)+dt/28);front=-1.7*WX.cover;amt=1;if(WX.cover>=1&&!WX.coverMsg){WX.coverMsg=true;wxToast('TEMPESTADE','céu totalmente fechado')}}else if(sc&&sc.fading){front=-1.7;back=-1.7+3.4*k;amt=1}
   else if(pr>0){front=1.4-1.4*pr;amt=.35+.65*pr}
-  u.set(Math.cos(dd),Math.sin(dd),front,amt);ub.set(back,0,sc?1:0,0);WX.stormAmt=sc?Math.max(k,WX.cover||0):pr*.5}
+  u.set(Math.cos(dd),Math.sin(dd),front,amt);ub.set(back,0,sc?1:0,0);WX.stormAmt=sc?Math.max(k,WX.cover||0):pr*.5;{const cv=WX.cover||0,sm=t=>t*t*(3-2*t),tg=sc?(sc.fading?k:sm(clamp((cv-.5)/.5,0,1))):0;WX.gloom=(WX.gloom||0)+(tg-(WX.gloom||0))*Math.min(1,dt*.8)}}
  const c0=camMode==='top'?camT:{x:camera.position.x,z:camera.position.z};
  WX.f+=(((PL.inside&&!TVM.on)?0:rainAt(c0.x,c0.z))-WX.f)*Math.min(1,dt*.7);const f=WX.f;
  if(played&&!menuOpen&&simT>(WX.msgT||0)){if(f>.45&&!WX.wet){WX.wet=true;WX.msgT=simT+20;toast('COMEÇOU A CHOVER AQUI')}else if(f<.12&&WX.wet){WX.wet=false;WX.msgT=simT+20;toast('A CHUVA PAROU AQUI')}}
@@ -2442,7 +2446,7 @@ function updateWeather(dt){const st=STYLES[S.style];
  if(city.M&&city.M.plant.userData.sh){const u=city.M.plant.userData.sh.uniforms;u.wTime.value=simT;u.wAmp.value=.12*f+.88*WX.storm*f}rainMat.uniforms.time.value=simT;skyMat.uniforms.camP.value.copy(camera.position);
  const c=camMode==='top'?camT:{x:camera.position.x,z:camera.position.z};rainMat.uniforms.ctr.value.set(c.x,0,c.z);
  const nf=DN.nightF;rainMat.uniforms.base.value=.03+.26*(1-nf);rainMat.uniforms.col.value.setRGB(.5,.53,.6).lerp(_c3.setRGB(.82,.86,.92),1-nf);
- WX.t-=dt;if(WX.t<=0&&rain.visible){WX.t=.2;const arr=[];
+ WX.t-=dt;if(WX.t<=0&&(rain.visible||WET.max>.02)){WX.t=.2;const arr=[];
   for(const ch of city.chunks.values())for(const l of ch.lamps)if(l.on&&!l.broken){const d=Math.hypot(l.x-c.x,l.z-c.z);if(d<75)arr.push([d,l.x+l.dx*1.6,4.6,l.z+l.dz*1.6,1.1,1,.66,.3])}
   if(nf>.35)for(const v of carsNear(c.x,c.z,45)){const ca=Math.cos(v.a),sa=Math.sin(v.a);arr.push([Math.hypot(v.x-c.x,v.z-c.z)+6,v.x+ca*(v.t.L/2+2.5),.9,v.z+sa*(v.t.L/2+2.5),.8,1,.95,.8]);if(v.police)arr.push([Math.hypot(v.x-c.x,v.z-c.z)+4,v.x,2,v.z,1.2,Math.floor(simT*7)%2?1:.15,.1,Math.floor(simT*7)%2?.15:1])}
   if(nf>.35)for(const ch of city.chunks.values())if(ch.tls)for(const l of ch.tls){const d=Math.hypot(l.hx-c.x,l.hz-c.z);if(d<55){const k=sig(l.kx,l.kz,l.d),cc=TLC[k];arr.push([d+8,l.hx,5.4,l.hz,.8,cc.r,cc.g,cc.b])}}
@@ -2558,8 +2562,8 @@ function updateDayNight(dt,force){const st=STYLES[S.style];const clk=$('#clock')
  city.sunOff=[dir.x*150,dir.y*150,dir.z*150];skyMat.uniforms.sunDir.value.set(Math.cos(ph)*.85,elev,-.38);skyMat.uniforms.night.value=nf;
  if(st.night&&elev<.08)skyMat.uniforms.sunDir.value.lerp(_v4.set(-1,.11,0),clamp((.08-elev)/.25,0,1));
  const low=clamp(1-elev*2.2,0,1),SY=st.night;sun.color.set(SY?'#fff0f4':'#fff0d8').lerp(_c1.set(SY?'#ff7ab0':'#ffa868'),low*dayF).lerp(_c2.set(SY?'#b09aff':'#8aa0ff'),nf);
- sun.intensity=(.98*clamp(elev*3.5,0,1)+.16*nf*(DN.moonL==null?1:DN.moonL))*(1-.7*WX.f)*(1-.55*WLD.cem.f);
- hemi.intensity=(.2+.38*dayF)*(1-.22*WX.f)*(1-.3*WLD.cem.f);hemi.color.set(SY?'#ffd8f2':'#dde9ff').lerp(_c1.set(SY?'#6a4ab0':'#3a4a7a'),nf);hemi.groundColor.set(SY?'#5a4a6a':'#5f564c').lerp(_c2.set(SY?'#1a0c28':'#14141c'),nf);
+ sun.intensity=(.98*clamp(elev*3.5,0,1)+.16*nf*(DN.moonL==null?1:DN.moonL))*(1-Math.max(.7*WX.f,.77*(WX.gloom||0)))*(1-.55*WLD.cem.f);
+ hemi.intensity=(.2+.38*dayF)*(1-Math.max(.22*WX.f,.26*(WX.gloom||0)))*(1-.3*WLD.cem.f);hemi.color.set(SY?'#ffd8f2':'#dde9ff').lerp(_c1.set(SY?'#6a4ab0':'#3a4a7a'),nf);hemi.groundColor.set(SY?'#5a4a6a':'#5f564c').lerp(_c2.set(SY?'#1a0c28':'#14141c'),nf);
  skyAt(h,skyMat.uniforms.top.value,skyMat.uniforms.hor.value);{const gf=WX.f*(1-.7*(WX.stormAmt||0));skyMat.uniforms.top.value.lerp(_c1.set(nf>.5?'#15171e':'#6a7078'),gf*.65);skyMat.uniforms.hor.value.lerp(_c2.set(nf>.5?'#24262e':'#9aa0a6'),gf*.6)}
  const fc=_c1.copy(skyMat.uniforms.hor.value).lerp(_c2.set(st.fog),dayF*.6);if(WLD.cem.f>.003)fc.lerp(_c2.set(nf>.5?'#1a1c24':'#7d838a'),WLD.cem.f*.85);if(scene.fog)scene.fog.color.copy(fc);scene.background.copy(fc).multiplyScalar(.85);
  if(city.wallMat)city.wallMat.emissiveIntensity=Math.max(0,(nf-.25)/.75)*(SY?1.25:1.15);
@@ -3186,6 +3190,8 @@ function laneKey(kx,kz,d,li){return((kx*64+kz)*4+d)*2+li}
 function validNext(bx,bz,d){const o=[];for(let k=0;k<4;k++){if(k===(d+2)%4)continue;if(canDrive(bx,bz,k))o.push(k)}if(!o.length){if(canDrive(bx,bz,(d+2)%4))o.push((d+2)%4);else for(let k=0;k<4;k++)if(segExists(bx,bz,k))o.push(k)}if(!o.length)o.push((d+2)%4);return o}
 function chooseNext(bx,bz,d){const o=validNext(bx,bz,d);if(!o.length)return(d+2)%4;return(o.includes(d)&&R2()<.5)?d:o[Math.floor(R2()*o.length)]}
 function nodeOff(kx,kz){return(Math.abs((kx*73856093)^(kz*19349663))%997)/997*CYC}
+// sinal para o TRÂNSITO: ignora a pane (o semáforo quebrado só pisca amarelo, os carros seguem o ciclo normal)
+function sigT(kx,kz,d){if(city.core&&isRural(kx*P,kz*P))return city.deg[kx][kz]<3?0:3;if(city.deg&&city.deg[kx]&&city.deg[kx][kz]<3)return 0;const t=(simT+nodeOff(kx,kz))%CYC;if(d%2===0)return t<9?0:t<11?1:2;return t<11?2:t<20?0:1}
 function sig(kx,kz,d){if(city.broken&&city.broken.has(kx*1000+kz))return 3;if(city.core&&isRural(kx*P,kz*P))return city.deg[kx][kz]<3?0:3;if(city.deg&&city.deg[kx]&&city.deg[kx][kz]<3)return 0;const t=(simT+nodeOff(kx,kz))%CYC;if(d%2===0)return t<9?0:t<11?1:2;return t<11?2:t<20?0:1}
 const TL={im:null,list:[],t:0};
 const TLC=[COL('#35ff6e'),COL('#ffc838'),COL('#ff2b2b'),COL('#ffb020')],TLC_OFF=COL('#2a2418');
@@ -3227,7 +3233,7 @@ function railPose(c){const r=c.rail;let x,z,a;
  c.x=x;c.z=z;c.a=a;c.fwd=r.v;c.vx=Math.cos(a)*r.v;c.vz=Math.sin(a)*r.v;c.w=0;c.gy=0;c.roll=c.pitch=0}
 function railUpdate(c,dt){const r=c.rail,t=c.t;let vt=c.vmax;const gap=leaderGap(c);
  if(!r.turn){const bx=r.kx+D[r.d][0],bz=r.kz+D[r.d][1];const stopS=SEG_END-4.4-t.L/2,dist=stopS-r.s;
-  if(dist>-.6){const sg=sig(bx,bz,r.d);if(sg===2||(sg===1&&dist>2.5))vt=Math.min(vt,Math.max(0,dist)*1.1)}
+  if(dist>-.6){const sg=sigT(bx,bz,r.d);if(sg===2||(sg===1&&dist>2.5))vt=Math.min(vt,Math.max(0,dist)*1.1)}
   if(r.nd!==r.d&&SEG_END-r.s<18)vt=Math.min(vt,6.5)}
  else if(r.nd!==r.d)vt=Math.min(vt,6.5);
  vt=Math.min(vt,Math.max(0,(gap-2.2)*1.0));
@@ -3286,7 +3292,7 @@ function aiUpdate(c,dt){
  if(sn>RW/2+1){ai.kx=bkx;ai.kz=bkz;ai.d=nd;ai.li=nli;ai.nd=null}
  let vt=ai.vmax;if(!straight&&s>P-RW/2-22)vt=Math.min(vt,5.5);
  // traffic light
- if(s<SEG_END-1&&!c.crim){const stopS=SEG_END-4.4-c.t.L/2,dist=stopS-s;if(dist>-.6){const sg=sig(bkx,bkz,ai.d);if(sg===2||(sg===1&&dist>2.5))vt=Math.min(vt,Math.max(0,dist)*1.1)}}
+ if(s<SEG_END-1&&!c.crim){const stopS=SEG_END-4.4-c.t.L/2,dist=stopS-s;if(dist>-.6){const sg=sigT(bkx,bkz,ai.d);if(sg===2||(sg===1&&dist>2.5))vt=Math.min(vt,Math.max(0,dist)*1.1)}}
  const ca=Math.cos(c.a),sa=Math.sin(c.a);let block=99;
  const chk=(ox,oz,len)=>{const ex=ox-c.x,ez=oz-c.z;if(ex*ex+ez*ez>484)return;const lx=ex*ca+ez*sa,lz=-ex*sa+ez*ca;if(lx>0&&lx<20&&Math.abs(lz)<2.2)block=Math.min(block,lx-c.t.L/2-len)};
  for(const o of carsNear(c.x,c.z,22))if(o!==c)chk(o.x,o.z,o.t.L/2);
@@ -3782,59 +3788,69 @@ function buildWet(st){if(WET.mesh){scene.remove(WET.mesh);WET.mesh.geometry.disp
  for(let i=0;i<src.length;i+=4){const r=src[i],gg=src[i+1],b=src[i+2];o[i]=(Math.abs(r-rr0)<3&&Math.abs(gg-rg0)<3&&Math.abs(b-rb0)<3)?255:0;o[i+1]=(Math.abs(r-dr)<3&&Math.abs(gg-dg)<3&&Math.abs(b-db)<3)?255:0;o[i+2]=(Math.abs(r-sr)<3&&Math.abs(gg-sg)<3&&Math.abs(b-sb)<3)?255:0;o[i+3]=255}
  mg.putImageData(out,0,0);WET.mask=new THREE.CanvasTexture(mc);WET.mask.flipY=false;WET.mask.minFilter=THREE.LinearFilter;WET.mask.generateMipmaps=false;
  WET.grid=new Uint8Array(WET.G*WET.G*4);WET.tex=new THREE.DataTexture(WET.grid,WET.G,WET.G,THREE.RGBAFormat);WET.tex.magFilter=THREE.LinearFilter;WET.tex.minFilter=THREE.LinearFilter;WET.tex.needsUpdate=true;WET.wf=new Float32Array(WET.G*WET.G);WET.max=0;
+ if(!WET.pud)WET.pud=wetPudTex();
  if(!WET.rt){WET.rt=new THREE.WebGLRenderTarget(16,16,{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter});WET.rt.texture.generateMipmaps=false}
  const mat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4,
-  uniforms:{mask:{value:WET.mask},wetT:{value:WET.tex},refl:{value:WET.rt.texture},tm:{value:WET.tm},time:{value:0},camP:{value:new THREE.Vector3()},C:{value:CELLS_U},sz:{value:S0},off:{value:MOFF},fogN:{value:200},fogF:{value:900},on:{value:1},syn:{value:st.night?1:0}},
+  uniforms:{fake:{value:1},skyA:{value:new THREE.Color()},skyB:{value:new THREE.Color()},L:{value:WX.lights},LC:{value:WX.lcol},mask:{value:WET.mask},wetT:{value:WET.tex},pudT:{value:WET.pud},refl:{value:WET.rt.texture},tm:{value:WET.tm},time:{value:0},camP:{value:new THREE.Vector3()},C:{value:CELLS_U},sz:{value:S0},off:{value:MOFF},fogN:{value:200},fogF:{value:900},on:{value:1},syn:{value:st.night?1:0}},
   defines:{WALK:0},
   vertexShader:`varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
-  fragmentShader:`uniform sampler2D mask,wetT,refl;uniform mat4 tm;uniform float time,sz,off,fogN,fogF,on,syn;uniform vec3 camP;uniform vec4 C[6];varying vec3 vW;
+  fragmentShader:`uniform float fake;uniform vec3 skyA,skyB;uniform vec4 L[12];uniform vec3 LC[12];uniform sampler2D mask,wetT,refl,pudT;uniform mat4 tm;uniform float time,sz,off,fogN,fogF,on,syn;uniform vec3 camP;uniform vec4 C[6];varying vec3 vW;
   float hh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-  float nz(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hh(i),hh(i+vec2(1.,0.)),f.x),mix(hh(i+vec2(0.,1.)),hh(i+vec2(1.,1.)),f.x),f.y);}
-  float rainHere(vec2 q){float r=0.;for(int i=0;i<6;i++){vec4 k=C[i];if(k.w<=0.)continue;float d=length(q-k.xy)/k.z;r=max(r,k.w*smoothstep(.45,.7,k.w)*(1.-smoothstep(.55,1.,d)));}return r;}
-  void main(){vec2 uv=(vW.xz+off)/sz;vec4 m=texture2D(mask,uv);
+  void main(){vec3 dv=camP-vW;float dd=length(dv);if(dd>175.)discard;
+   vec2 uv=(vW.xz+off)/sz;vec4 m=texture2D(mask,uv);
 #if WALK
-   float road=m.b,dirt=0.;
-   #else
-   float road=m.r,dirt=m.g;
-   #endif
-   if(road+dirt<.05)discard;
-   float w=texture2D(wetT,uv).r;if(w<.02)discard;
-   float n=nz(vW.xz*.09)*.6+nz(vW.xz*.31)*.3+nz(vW.xz*1.3)*.1;float th=.7-.12*w;
-   #if WALK
-   th+=.05;
-   #endif
-   float pud=smoothstep(th,th+.03,n);
-   float rh=rainHere(vW.xz);
-   // gotas: anéis que nascem e se expandem em células de 0,7 m
-   vec2 cell=floor(vW.xz/.7),fc=fract(vW.xz/.7)-.5;float ph=fract(time*1.3+hh(cell)*7.);vec2 ctr=(vec2(hh(cell+3.1),hh(cell+7.7))-.5)*.5;
-   float rd=length(fc-ctr);float ring=sin((rd-ph*.45)*55.)*smoothstep(.45,.0,abs(rd-ph*.45)*6.)*(1.-ph);
-   vec2 dist=(fc-ctr)/max(rd,.001)*ring*.012*rh*step(hh(cell+1.3),.6)+vec2(nz(vW.xz*2.+time*.7)-.5,nz(vW.zx*2.-time*.6)-.5)*.004*(.4+rh);
-   vec4 pr=tm*vec4(vW.x,0.,vW.z,1.);pr.xy+=dist*pr.w*mix(.5,1.,pud);vec3 r=texture2DProj(refl,pr).rgb;
-   vec3 V=normalize(camP-vW);float fr=.03+.97*pow(1.-clamp(V.y,0.,1.),5.);float dd=length(camP-vW);float fog=1.-smoothstep(fogN,fogF,dd);
+   float road=m.b;if(road<.05)discard;
+#else
+   float road=m.r,dirt=m.g;if(road+dirt<.05)discard;
+#endif
+   vec4 wt=texture2D(wetT,uv);float w=wt.r;if(w<.02)discard;
+   float n=texture2D(pudT,vW.xz/128.).r;float fog=(1.-smoothstep(fogN,fogF,dd))*(1.-smoothstep(130.,175.,dd));
+#if WALK
+   // calçada: só escurece e dá um brilho leve (sem espelho e sem gotas)
+   float pud=smoothstep(.63-.12*w,.66-.12*w,n);float a=road*w*(.10+.22*pud)*fog*on;if(a<.004)discard;gl_FragColor=vec4(vec3(.05,.06,.08)+.10*pud,a);}
+#else
+   float th=.7-.12*w,pud=smoothstep(th,th+.03,n);float rh=wt.g;vec2 dist=vec2(0.);
+   if(dd<25.){// gotas só perto da câmera
+    vec2 cell=floor(vW.xz/.7),fc=fract(vW.xz/.7)-.5;float ph=fract(time*1.3+hh(cell)*7.);vec2 ctr=(vec2(hh(cell+3.1),hh(cell+7.7))-.5)*.5;
+    float rd=length(fc-ctr);float ring=sin((rd-ph*.45)*55.)*smoothstep(.45,.0,abs(rd-ph*.45)*6.)*(1.-ph);
+    dist=(fc-ctr)/max(rd,.001)*ring*.012*rh*step(hh(cell+1.3),.6)*(1.-dd/25.);}
+   dist+=(texture2D(pudT,vW.xz/9.+vec2(time*.05,time*.04)).r-.5)*.008*(.4+rh);
+   float vy=clamp(dv.y/dd,0.,1.),f1=1.-vy,f2=f1*f1,fr=.03+.97*f2*f2*f1;vec3 r;
+   if(fake>.5){// reflexo falso: céu em gradiente + rastros verticais das luzes próximas (postes, faróis, semáforos, giroflex)
+    r=mix(skyA,skyB,clamp(fr*1.3,0.,1.))*(.72+.2*n);vec2 vd=normalize(-dv.xz+vec2(1e-4));vec2 pp=vW.xz+dist*60.;
+    for(int i=0;i<12;i++){vec4 l=L[i];if(l.y<-100.)continue;vec2 q=l.xz-pp;float al=dot(q,vd),pe=dot(q,vec2(-vd.y,vd.x));
+     float s=exp(-pe*pe/(.10+.012*abs(al)))*exp(-max(0.,-al)*2.5)*exp(-max(0.,al)/(l.y*1.6+3.))*l.w;r+=LC[i]*s*2.6;}}
+   else{vec4 pr=tm*vec4(vW.x,0.,vW.z,1.);pr.xy+=dist*pr.w*mix(.5,1.,pud);r=texture2DProj(refl,pr).rgb;}
    float aRoad=road*w*(.1+.38*fr)*(1.-pud)+road*pud*min(1.,w*1.4)*(.6+.35*fr);
    float aDirt=dirt*pud*w*(.5+.3*fr);vec3 col=r*mix(.75,1.,pud);if(dirt>.5)col*=vec3(.82,.72,.58);
-   float lum=max(col.r,max(col.g,col.b));float hot=max(lum-.45,0.);col+=max(col-.5,0.)*1.5;float a=clamp(max(aRoad,aDirt)*(1.+hot*4.),0.,.96)*fog*on;if(a<.004)discard;gl_FragColor=vec4(col,a);}`});
+   float lum=max(col.r,max(col.g,col.b));float hot=max(lum-.45,0.);col+=max(col-.5,0.)*1.5;float a=clamp(max(aRoad,aDirt)*(1.+hot*4.),0.,.96)*fog*on;if(a<.004)discard;gl_FragColor=vec4(col,a);}
+#endif
+`});
  const geo=new THREE.PlaneGeometry(S0,S0);geo.rotateX(-Math.PI/2);WET.mesh=new THREE.Mesh(geo,mat);WET.mesh.position.set(E/2,.012,E/2);WET.mesh.renderOrder=2;WET.mesh.frustumCulled=false;WET.mesh.visible=false;scene.add(WET.mesh);
  // calçadas: segunda malha (mesma geometria e uniforms compartilhados) na altura da calçada, só pixels B da máscara
  const mat2=new THREE.ShaderMaterial({transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4,uniforms:mat.uniforms,defines:{WALK:1},vertexShader:mat.vertexShader,fragmentShader:mat.fragmentShader});
  WET.mesh2=new THREE.Mesh(geo,mat2);WET.mesh2.position.set(E/2,.212,E/2);WET.mesh2.renderOrder=2;WET.mesh2.frustumCulled=false;WET.mesh2.visible=false;scene.add(WET.mesh2)}
+function wetPudTex(){const N=512,T=128,d=new Uint8Array(N*N*4);const H=(i,j,p,s)=>{i=((i%p)+p)%p;j=((j%p)+p)%p;const v=Math.sin(i*127.1+j*311.7+s*17.3)*43758.5453;return v-Math.floor(v)};
+ const vn=(x,y,p,s)=>{const i=Math.floor(x),j=Math.floor(y);let fx=x-i,fy=y-j;fx=fx*fx*(3-2*fx);fy=fy*fy*(3-2*fy);const a=H(i,j,p,s),b=H(i+1,j,p,s),c=H(i,j+1,p,s),e=H(i+1,j+1,p,s);return a+(b-a)*fx+(c-a)*fy+(a-b-c+e)*fx*fy};
+ for(let y=0;y<N;y++)for(let x=0;x<N;x++){const u=x/N,v=y/N;const n=vn(u*12,v*12,12,1)*.6+vn(u*40,v*40,40,2)*.3+vn(u*166,v*166,166,3)*.1;const o=(y*N+x)*4;d[o]=d[o+1]=d[o+2]=Math.round(n*255);d[o+3]=255}
+ const t=new THREE.DataTexture(d,N,N,THREE.RGBAFormat);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.magFilter=THREE.LinearFilter;t.minFilter=THREE.LinearFilter;t.needsUpdate=true;WET.pudT=T;return t}
 function stepWet(dt){if(!WET.grid||!city.ext)return;WET.t-=dt;if(WET.t>0)return;const st=.5;WET.t=st;const G=WET.G,E=city.ext,S0=E+MOFF*2;let mx=0;
  for(let j=0;j<G;j++)for(let i=0;i<G;i++){const k=j*G+i,x=(i+.5)/G*S0-MOFF,z=(j+.5)/G*S0-MOFF;const r=CELLS.length?rainAt(x,z):0;let w=WET.wf[k];
-  if(r>.25)w=Math.min(1,w+r*st/22);else w=Math.max(0,w-st/(DN.nightF>.5?95:60)*(w<.25?1.6:1));WET.wf[k]=w;WET.grid[k*4]=w*255;if(w>mx)mx=w}
+  if(r>.25)w=Math.min(1,w+r*st/22);else w=Math.max(0,w-st/(DN.nightF>.5?95:60)*(w<.25?1.6:1));WET.wf[k]=w;WET.grid[k*4]=w*255;WET.grid[k*4+1]=Math.min(1,r)*255;if(w>mx)mx=w}
  WET.max=mx;WET.tex.needsUpdate=true}
 function renderReflection(){const m=WET.mesh;if(!m)return;const on=S.refl!==false&&WET.max>.02&&!PL.inside&&!NAV.open;m.visible=on;if(WET.mesh2)WET.mesh2.visible=on;if(!on)return;
- const u=m.material.uniforms;u.time.value=simT;u.camP.value.copy(camera.position);u.on.value=city.st.night?1:.48+.52*Math.max(DN.nightF||0,clamp((WX.f||0)*1.6,0,1));if(scene.fog){u.fogN.value=scene.fog.near*.9;u.fogF.value=scene.fog.far*.95}
- WET.fc=((WET.fc||0)+1)%2;if(WET.fc&&WET.rt.width>64)return;
- const sz=renderer.getDrawingBufferSize(new THREE.Vector2()),q=camMode==='top'?.3:.36,w=Math.max(64,Math.floor(sz.x*q)),h=Math.max(64,Math.floor(sz.y*q));if(WET.rt.width!==w||WET.rt.height!==h)WET.rt.setSize(w,h);
+ const u=m.material.uniforms;u.time.value=simT;u.camP.value.copy(camera.position);u.on.value=.5*(city.st.night?1:.48+.52*Math.max(DN.nightF||0,clamp((WX.f||0)*1.6,0,1)));if(scene.fog){u.fogN.value=scene.fog.near*.9;u.fogF.value=scene.fog.far*.95}
+ const sz=renderer.getDrawingBufferSize(WET.v2||(WET.v2=new THREE.Vector2())),q=camMode==='top'?.3:.36,w=Math.max(64,Math.floor(sz.x*q)),h=Math.max(64,Math.floor(sz.y*q));if(WET.rt.width!==w||WET.rt.height!==h)WET.rt.setSize(w,h);
  const c=WET.cam,cp=camera.position;camera.updateMatrixWorld();c.fov=camera.fov;c.aspect=camera.aspect;c.near=camera.near;c.far=camera.far;c.updateProjectionMatrix();
  const fw=new THREE.Vector3();camera.getWorldDirection(fw);const up=new THREE.Vector3(0,1,0).applyQuaternion(camera.quaternion);
  c.position.set(cp.x,-cp.y,cp.z);c.up.set(up.x,-up.y,up.z);c.lookAt(cp.x+fw.x,-(cp.y+fw.y),cp.z+fw.z);c.updateMatrixWorld();
  WET.tm.copy(WET.bias).multiply(c.projectionMatrix).multiply(c.matrixWorldInverse);
+ u.fake.value=WET.fake===false?0:1;u.skyA.value.copy(skyMat.uniforms.top.value).multiplyScalar(.8);u.skyB.value.copy(skyMat.uniforms.hor.value).multiplyScalar(.8);if(u.fake.value)return;
  const sp=sky.position.clone(),sm=renderer.shadowMap.autoUpdate,rv=rain.visible;sky.position.copy(c.position);m.visible=false;if(WET.mesh2)WET.mesh2.visible=false;renderer.shadowMap.autoUpdate=false;rain.visible=false;
  // culling dos chunks: a câmera principal esconde chunks fora da tela, mas o reflexo mostra o que está acima/atrás -> união com o frustum espelhado
  WET.pm.multiplyMatrices(c.projectionMatrix,c.matrixWorldInverse);WET.fr.setFromProjectionMatrix(WET.pm);
- if(city.chunks)for(const ch of city.chunks.values()){const dd=Math.hypot(Math.max(ch.x0-cp.x,0,cp.x-ch.x1),Math.max(ch.z0-cp.z,0,cp.z-ch.z1));if(dd>230){ch.group.visible=false;continue}if(ch.group.visible)continue;WET.bx.min.set(ch.x0-12,-5,ch.z0-12);WET.bx.max.set(ch.x1+12,(ch.y1||60)+8,ch.z1+12);if(WET.fr.intersectsBox(WET.bx))ch.group.visible=true}
- renderer.clippingPlanes=WET.clip;renderer.setRenderTarget(WET.rt);renderer.clear();renderer.render(scene,c);renderer.setRenderTarget(null);renderer.clippingPlanes=[];
+ if(city.chunks)for(const ch of city.chunks.values()){const dd=Math.hypot(Math.max(ch.x0-cp.x,0,cp.x-ch.x1),Math.max(ch.z0-cp.z,0,cp.z-ch.z1));if(dd>150){ch.group.visible=false;continue}if(ch.group.visible)continue;WET.bx.min.set(ch.x0-12,-5,ch.z0-12);WET.bx.max.set(ch.x1+12,(ch.y1||60)+8,ch.z1+12);if(WET.fr.intersectsBox(WET.bx))ch.group.visible=true}
+ renderer.clippingPlanes=WET.clip;renderer.setRenderTarget(WET.rt);const cc0=renderer.getClearColor(WET.cc||(WET.cc=new THREE.Color())).clone(),ca0=renderer.getClearAlpha();renderer.setClearColor(skyMat.uniforms.hor.value.clone().lerp(skyMat.uniforms.top.value,.5).multiplyScalar(.8),1);renderer.clear();renderer.render(scene,c);renderer.setRenderTarget(null);renderer.setClearColor(cc0,ca0);renderer.clippingPlanes=[];
  if(city.chunks)cullChunks();
  sky.position.copy(sp);renderer.shadowMap.autoUpdate=sm;rain.visible=rv;m.visible=true;if(WET.mesh2)WET.mesh2.visible=true}
 
@@ -4166,14 +4182,14 @@ function saveToFile(){if(CHEAT.used){toast('CHEAT ATIVO · NÃO É POSSÍVEL SAL
  SAVE.fileT=simT;toast('JOGO SALVO EM ARQUIVO<br><small style="font-size:11px;color:#fff">guarde o .psave · MENU → CARREGAR ARQUIVO para voltar</small>');syncSave()}
 function loadFromFile(file){if(!file)return;const r=new FileReader();r.onload=()=>{let d=null;try{d=JSON.parse(r.result)}catch(e){}
   if(!d||d.v!==1||typeof d.seed!=='number'){toast('ARQUIVO DE SAVE INVÁLIDO');return}
-  S.seed=d.seed;if(STYLES[d.style])S.style=d.style;S.size=d.size||S.size;S.hour=Math.floor((d.tod||480)/60)%24;if(d.cfg){applyCfgObj(d.cfg);saveCfg();applyVolumes();try{applyShadows()}catch(e){}}if(d.wxs){S.rain=!!d.wxs.rain;S.storm=!!d.wxs.storm}cfgUI();startGame(d);SAVE.fileT=simT};r.readAsText(file)}
+  S.seed=d.seed;if(STYLES[d.style])S.style=d.style;S.size=d.size||S.size;S.hour=Math.floor((d.tod||480)/60)%24;if(d.cfg){applyCfgObj(d.cfg);saveCfg();applyVolumes();try{applyShadows()}catch(e){}}if(d.wxs){S.rain=true;S.storm=!!d.wxs.storm}cfgUI();startGame(d);SAVE.fileT=simT};r.readAsText(file)}
 function readSave(){try{/* save antigo do navegador (só leitura) */const d=JSON.parse(localStorage.getItem('ps_save')||'null');return d&&d.v===1?d:null}catch(e){return null}}
 function syncSave(){const d=readSave();$('#loadSave').hidden=!d||played;$('#saveFile').hidden=!played;$('#saveInfo').textContent=played?'O jogo não salva sozinho: use SALVAR JOGO':d?`Save antigo no navegador: seed ${d.seed} · ${new Date(d.t).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`:''}
 function wxState(){const K=['x','z','r','s','max','life','age','big','storm','fading','split','wait'];let wet=null;
  if(WET.wf){const b=new Uint8Array(WET.wf.length);for(let i=0;i<b.length;i++)b[i]=Math.round(WET.wf[i]*255);let t='';for(let i=0;i<b.length;i++)t+=String.fromCharCode(b[i]);wet=btoa(t)}
  return{rain:!!S.rain,storm:!!S.storm,wx:WX.wx,wz:WX.wz,chance:WX.chance,cellT:WX.cellT,stormEta:WX.stormEta,stormMsg:WX.stormMsg,stormDir:WX.stormDir,stormNext:WX.stormNext,cover:WX.cover,coverMsg:WX.coverMsg,pre:WX.pre,
   cells:CELLS.map(c=>{const o={};for(const k of K)if(c[k]!==undefined)o[k]=c[k];return o}),stormIdx:CELLS.indexOf(WX.stormCell),wet}}
-function applyWx(w){if(!w)return;S.rain=!!w.rain;S.storm=!!w.storm;$('#optRain').checked=S.rain;$('#optStorm').checked=S.storm;
+function applyWx(w){if(!w)return;S.rain=true;S.storm=!!w.storm;$('#optRain').checked=S.rain;$('#optStorm').checked=S.storm;
  for(const k of ['wx','wz','chance','cellT','stormEta','stormMsg','stormDir','stormNext','cover','coverMsg','pre'])WX[k]=w[k]===undefined?WX[k]:w[k];
  CELLS.length=0;for(const c of w.cells||[])CELLS.push({...c});WX.stormCell=w.stormIdx>=0?CELLS[w.stormIdx]||null:null;WX.lastOpt=S.rain;WX.stormReq=false;WX.f=0;
  if(w.wet&&WET.wf){const t=atob(w.wet);for(let i=0;i<Math.min(t.length,WET.wf.length);i++)WET.wf[i]=t.charCodeAt(i)/255;WET.t=0;try{stepWet(0)}catch(e){}}}
@@ -4219,8 +4235,8 @@ const CHC={buf:'',pad:[],list:[
  {c:'TURNDOWNTHEHEAT',p:[5,5,1,7,12,13,12,13,12,13],n:'POLÍCIA ESQUECEU',f:()=>{if(POL.wanted)endWanted(true);WZ.list.length=0;WZ.crime=null}},
  {c:'ASNAEB',n:'POLÍCIA ESQUECEU',f:()=>{if(POL.wanted)endWanted(true);WZ.list.length=0;WZ.crime=null}},
  {c:'CPKTNWT',p:[7,6,5,4,6,7,2,3,1,3,6,4],n:'TODOS OS CARROS EXPLODEM',f:()=>{const pc=PL.car||PL;for(const v of vehicles.slice())if(v!==PL.car&&v.alive&&!v.t.boat&&Math.hypot(v.x-pc.x,v.z-pc.z)<160){if(v.mode==='rail')toPhys(v);setOnFire(v);v.fuse=.2+Math.random()*1.5}}},
- {c:'AUIFRVQS',p:[7,0,4,4,6,6,6,1],n:'TEMPO CHUVOSO',f:()=>{S.rain=true;$('#optRain').checked=true}},
- {c:'AFZLLQLL',p:[7,0,4,4,6,6,6,13],n:'TEMPO ENSOLARADO',f:()=>{S.rain=false;S.storm=false;$('#optRain').checked=false;$('#optStorm').checked=false;WX.stormReq=false;WX.stormEta=null;WX.stormCell=null;CELLS.length=0}},
+ {c:'AUIFRVQS',p:[7,0,4,4,6,6,6,1],n:'TEMPO CHUVOSO',f:()=>{S.rain=true;const pc=PL.car||PL;const c=spawnCell(false,{x:pc.x,z:pc.z,r:280,s:.85});c.max=.9;c.s=.9;c.wait=0;c.life=150}},
+ {c:'AFZLLQLL',p:[7,0,4,4,6,6,6,13],n:'TEMPO ENSOLARADO',f:()=>{S.storm=false;WX.cellT=300;$('#optStorm').checked=false;WX.stormReq=false;WX.stormEta=null;WX.stormCell=null;CELLS.length=0}},
  {c:'SPEEDFREAK',n:'NITRO NO CARRO',f:()=>{const c=PL.car;if(c){c.hasNitro=true}}}]};
 function cheatRun(code){const it=CHC.list.find(q=>q.c===code);if(!it||!played)return false;CHEAT.used=true;
  if(it.t){const on=!CHEAT[it.t];CHEAT[it.t]=on;const el=$('#'+{hp:'chHp',ammo:'chAmmo',wanted:'chWanted'}[it.t]);if(el)el.checked=on;toast('CHEAT '+(on?'ATIVADO':'DESATIVADO')+'<br><small style="font-size:11px;color:#fff">'+it.c+' · '+it.n+'</small>')}

@@ -656,3 +656,42 @@ A chuva não cobre a cidade inteira de uma vez: ela vem em **células de chuva**
 
 ## Atualização v77
 - A **barra de vida** agora tem exatamente a mesma largura total das duas barras de cima (VEÍCULO + COMBUSTÍVEL): as bordas da esquerda e da direita ficam alinhadas, no PC e no celular.
+
+## Atualização v78 — reflexo ainda mais leve (menos engasgos na chuva)
+- O reflexo voltou a ser atualizado **todo frame**, mas bem mais barato. Atualizar um frame sim e outro não deixava o tempo de cada frame irregular e dava sensação de engasgo; agora o ritmo é constante.
+- **Resolução do reflexo** caiu de 36% para **22%** da tela (18% na vista de cima). Na poça, que já é distorcida e borrada, quase não dá pra notar.
+- O espelho agora só desenha os **quarteirões até ~150 m** (antes ~230 m).
+- Entram no reflexo **só as coisas grandes e que brilham**: paredes e janelas dos prédios, telhados, neons, luzes, postes, semáforos e carros. Ficam de fora árvores, calçadas, faixas, lixeiras, detalhes pequenos, pedestres e partículas.
+- O **céu não é mais redesenhado** no reflexo: a poça usa um gradiente com a cor do céu da hora. Antes o reflexo recalculava as nuvens e a tempestade, que era a parte mais cara.
+
+## Atualização v79
+- **Semáforo derrubado não deixa mais o trânsito caótico**: bater num semáforo continua deixando os semáforos daquele cruzamento **piscando amarelo** (aviso "SEMÁFORO EM PANE"), mas os carros da IA seguem o ciclo normal de parar e andar naquele cruzamento, sem invadir uns aos outros.
+
+## Atualização v80
+- O botão **CONTINUAR** do menu agora é **verde** (fica mais claro com o mouse ou o controle em cima), destacando a volta para o jogo.
+
+## Atualização v81
+- **Poças mais discretas**: o reflexo ficou com **metade da intensidade** (semi-reflexivo, mais "opaco"), e o céu refletido ficou um pouco mais escuro. Assim a poça mostra o asfalto molhado por baixo, em vez de parecer um espelho.
+- A resolução do reflexo voltou para **36%** da tela (30% na vista de cima). O resto das otimizações da v78 continua.
+
+## Atualização v82 — chão molhado mais leve
+- **Formato das poças pré-calculado**: o desenho das poças (antes 3 camadas de ruído calculadas em cada pixel, todo frame) agora é uma textura gerada uma vez no começo do jogo. As poças ficam com o mesmo visual.
+- **Chuva por textura**: o shader não percorre mais as 6 células de chuva em cada pixel; a intensidade da chuva vem da mesma grade que já marca onde está molhado (atualizada a cada 0,5 s).
+- **Gotas só perto da câmera**: os anéis das gotas nas poças só são calculados até ~25 m (e somem suavemente). A ondulação do reflexo usa uma leitura de textura em vez de 2 ruídos.
+- **Corte de distância**: depois de ~150–175 m o chão molhado é descartado logo no início do cálculo (antes fazia tudo para depois sumir na neblina).
+- **Calçada simplificada**: a calçada molhada só escurece e ganha um brilho leve nas poças, sem espelho e sem gotas. O reflexo fica na rua, onde aparece de verdade.
+
+## Atualização v83 — reflexo falso e luz da tempestade
+### Reflexo falso nas poças (bem mais leve)
+- As poças **não redesenham mais a cidade** num espelho (era o que mais pesava na chuva). Agora o reflexo é **simulado**: a poça mostra um degradê com as cores do céu da hora (mais claro olhando de longe, mais escuro olhando pra baixo) e **rastros verticais de luz** das luzes próximas, como asfalto molhado de verdade: postes acesos, faróis dos carros à noite, semáforos (vermelho/amarelo/verde) e o giroflex vermelho/azul da polícia.
+- As gotas, a ondulação, as poças e o brilho continuam iguais. Prédios e carros não aparecem mais "espelhados" na poça.
+### Tempestade escurece aos poucos
+- Antes o sol só sumia de repente quando a chuva começava (depois do céu 100% fechado). Agora a luz do sol e do ambiente **começa a cair quando a tempestade cobre 50% do céu** e chega ao mais escuro quando cobre 100%.
+- A tempestade escurece cerca de **10% a mais** que uma chuva comum isolada, mas continua bem mais clara que a noite. Quando ela vai embora, a luz volta junto com o céu limpando.
+
+## Atualização v84 — chuva natural
+- O tick **Chuva** saiu do menu: a chuva agora faz parte do jogo sempre. Só a **Tempestade** continua como opção, por ser especial.
+- Cada cidade tem o seu **clima**, que vem do **seed**: uma chance de chuva entre **0% e 100%**. Com chance baixa quase nunca chove; com chance alta chove bastante. Exemplos: seed 411 ≈ 84%, 1234 ≈ 85%, 909580 ≈ 33%, 520300 ≈ 27%, 77 ≈ 5%, 5 ≈ 4%.
+- O momento de cada chuva continua **aleatório**: você pode entrar no jogo e não chover, ou entrar e **já estar chovendo** (a chance de começar chovendo é a mesma do clima da cidade).
+- Saves antigos com a chuva desligada passam a ter chuva natural também.
+- Cheats: **AUIFRVQS** faz chover agora, em cima de você; **AFZLLQLL** limpa o céu e segura a chuva por uns 5 minutos.
